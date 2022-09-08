@@ -25,8 +25,16 @@ String formatDuration(Duration position) {
           ? '00'
           : '0$seconds';
 
-  final formattedTime =
-      '${hoursString == '00' ? '' : '$hoursString:'}$minutesString:$secondsString';
+  final formattedTime = '${hoursString == '00' ? '' : '$hoursString:'}$minutesString:$secondsString';
 
   return formattedTime;
+}
+
+extension DurationExtensions on Duration {
+  String printDuration() {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    final String twoDigitMinutes = twoDigits(inMinutes.abs().remainder(60));
+    final String twoDigitSeconds = twoDigits(inSeconds.abs().remainder(60));
+    return "$twoDigitMinutes:$twoDigitSeconds";
+  }
 }

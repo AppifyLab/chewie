@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:chewie/src/animated_play_pause.dart';
 import 'package:chewie/src/center_play_button.dart';
@@ -9,8 +10,8 @@ import 'package:chewie/src/material/material_progress_bar.dart';
 import 'package:chewie/src/material/widgets/options_dialog.dart';
 import 'package:chewie/src/material/widgets/playback_speed_dialog.dart';
 import 'package:chewie/src/models/option_item.dart';
-import 'package:chewie/src/models/subtitle_model.dart';
 import 'package:chewie/src/notifiers/index.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
@@ -29,14 +30,13 @@ class MaterialDesktopControls extends StatefulWidget {
   }
 }
 
-class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
-    with SingleTickerProviderStateMixin {
+class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with SingleTickerProviderStateMixin {
   late PlayerNotifier notifier;
   late VideoPlayerValue _latestValue;
   double? _latestVolume;
   Timer? _hideTimer;
   Timer? _initTimer;
-  late var _subtitlesPosition = Duration.zero;
+  // late var _subtitlesPosition = Duration.zero;
   bool _subtitleOn = false;
   Timer? _showAfterExpandCollapseTimer;
   bool _dragging = false;
@@ -93,15 +93,23 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
                 _buildHitArea(),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
+
+                // alignment: Alignment.bottomCenter,
                 children: <Widget>[
                   if (_subtitleOn)
                     Transform.translate(
                       offset: Offset(
                         0.0,
-                        notifier.hideStuff ? barHeight * 0.8 : 0.0,
+                        notifier.hideStuff
+                            ? barHeight * 0.8
+                            : chewieController.isFullScreen
+                                ? 0
+                                : barHeight * 0.8,
                       ),
-                      child:
-                          _buildSubtitles(context, chewieController.subtitle!),
+                      child: ClosedCaption(
+                        text: _chewieController?.videoPlayerController.value.caption.text,
+                        textStyle: const TextStyle(fontSize: 14, color: Colors.white),
+                      ),
                     ),
                   _buildBottomBar(context),
                 ],
@@ -159,13 +167,11 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
           _onSpeedButtonTap();
         },
         iconData: Icons.speed,
-        title: chewieController.optionsTranslation?.playbackSpeedButtonText ??
-            'Playback speed',
+        title: chewieController.optionsTranslation?.playbackSpeedButtonText ?? 'Playback speed',
       )
     ];
 
-    if (chewieController.additionalOptions != null &&
-        chewieController.additionalOptions!(context).isNotEmpty) {
+    if (chewieController.additionalOptions != null && chewieController.additionalOptions!(context).isNotEmpty) {
       options.addAll(chewieController.additionalOptions!(context));
     }
 
@@ -186,8 +192,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
               useRootNavigator: chewieController.useRootNavigator,
               builder: (context) => OptionsDialog(
                 options: options,
-                cancelButtonText:
-                    chewieController.optionsTranslation?.cancelButtonText,
+                cancelButtonText: chewieController.optionsTranslation?.cancelButtonText,
               ),
             );
           }
@@ -204,40 +209,38 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
     );
   }
 
-  Widget _buildSubtitles(BuildContext context, Subtitles subtitles) {
-    if (!_subtitleOn) {
-      return Container();
-    }
-    final currentSubtitle = subtitles.getByPosition(_subtitlesPosition);
-    if (currentSubtitle.isEmpty) {
-      return Container();
-    }
+  // Widget _buildSubtitles(BuildContext context, Subtitles subtitles) {
+  //   if (!_subtitleOn) {
+  //     return Container();
+  //   }
+  //   final currentSubtitle = subtitles.getByPosition(_subtitlesPosition);
+  //   if (currentSubtitle.isEmpty) {
+  //     return Container();
+  //   }
 
-    if (chewieController.subtitleBuilder != null) {
-      return chewieController.subtitleBuilder!(
-        context,
-        currentSubtitle.first!.text,
-      );
-    }
+  //   if (chewieController.subtitleBuilder != null) {
+  //     return chewieController.subtitleBuilder!(
+  //       context,
+  //       currentSubtitle.first!.text,
+  //     );
+  //   }
 
-    return Padding(
-      padding: EdgeInsets.all(marginSize),
-      child: Container(
-        padding: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          color: const Color(0x96000000),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Text(
-          currentSubtitle.first!.text.toString(),
-          style: const TextStyle(
-            fontSize: 18,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-  }
+  //   return Padding(
+  //     padding: EdgeInsets.all(marginSize),
+  //     child: Container(
+  //       padding: const EdgeInsets.all(5),
+  //       decoration: BoxDecoration(
+  //         color: const Color(0x96000000),
+  //         borderRadius: BorderRadius.circular(10.0),
+  //       ),
+  //       child: Text(
+  //         currentSubtitle.first!.text.toString(),
+  //         style: const TextStyle(fontSize: 18),
+  //         textAlign: TextAlign.center,
+  //       ),
+  //     ),
+  //   );
+  // }
 
   AnimatedOpacity _buildBottomBar(
     BuildContext context,
@@ -249,8 +252,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
       duration: const Duration(milliseconds: 300),
       child: Container(
         height: barHeight + (chewieController.isFullScreen ? 20.0 : 0),
-        padding:
-            EdgeInsets.only(bottom: chewieController.isFullScreen ? 10.0 : 15),
+        padding: EdgeInsets.only(bottom: chewieController.isFullScreen ? 10.0 : 15),
         child: SafeArea(
           bottom: chewieController.isFullScreen,
           child: Column(
@@ -263,17 +265,10 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
                   children: <Widget>[
                     _buildPlayPause(controller),
                     _buildMuteButton(controller),
-                    if (chewieController.isLive)
-                      const Expanded(child: Text('LIVE'))
-                    else
-                      _buildPosition(iconColor),
+                    if (chewieController.isLive) const Expanded(child: Text('LIVE')) else _buildPosition(iconColor),
                     const Spacer(),
-                    if (chewieController.showControls &&
-                        chewieController.subtitle != null &&
-                        chewieController.subtitle!.isNotEmpty)
-                      _buildSubtitleToggle(icon: Icons.subtitles),
-                    if (chewieController.showOptions)
-                      _buildOptionsButton(icon: Icons.settings),
+                    if (chewieController.showControls && chewieController.showSubtitle) _buildSubtitleToggle(icon: Icons.subtitles),
+                    if (chewieController.showOptions) _buildOptionsButton(icon: Icons.settings),
                     if (chewieController.allowFullScreen) _buildExpandButton(),
                   ],
                 ),
@@ -315,9 +310,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
           ),
           child: Center(
             child: Icon(
-              chewieController.isFullScreen
-                  ? Icons.fullscreen_exit
-                  : Icons.fullscreen,
+              chewieController.isFullScreen ? Icons.fullscreen_exit : Icons.fullscreen,
               color: Colors.white,
             ),
           ),
@@ -328,35 +321,44 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
 
   Widget _buildHitArea() {
     final bool isFinished = _latestValue.position >= _latestValue.duration;
-    final bool showPlayButton =
-        widget.showPlayButton && !_dragging && !notifier.hideStuff;
+    final bool showPlayButton = widget.showPlayButton && !_dragging && !notifier.hideStuff;
 
-    return GestureDetector(
-      onTap: () {
-        if (_latestValue.isPlaying) {
-          if (_displayTapped) {
-            setState(() {
-              notifier.hideStuff = true;
-            });
-          } else {
-            _cancelAndRestartTimer();
-          }
-        } else {
-          _playPause();
+    return Row(
+      children: [
+        const Spacer(),
+        _buildSkipForwardBackward(isForward: false),
+        const Spacer(),
+        GestureDetector(
+          onTap: () {
+            if (_latestValue.isPlaying) {
+              if (_displayTapped) {
+                setState(() {
+                  notifier.hideStuff = true;
+                });
+              } else {
+                _cancelAndRestartTimer();
+              }
+            } else {
+              _playPause();
 
-          setState(() {
-            notifier.hideStuff = true;
-          });
-        }
-      },
-      child: CenterPlayButton(
-        backgroundColor: Colors.black54,
-        iconColor: Colors.white,
-        isFinished: isFinished,
-        isPlaying: controller.value.isPlaying,
-        show: showPlayButton,
-        onPressed: _playPause,
-      ),
+              setState(() {
+                notifier.hideStuff = true;
+              });
+            }
+          },
+          child: CenterPlayButton(
+            backgroundColor: Colors.black54,
+            iconColor: Colors.white,
+            isFinished: isFinished,
+            isPlaying: controller.value.isPlaying,
+            show: showPlayButton,
+            onPressed: _playPause,
+          ),
+        ),
+        const Spacer(),
+        _buildSkipForwardBackward(),
+        const Spacer(),
+      ],
     );
   }
 
@@ -402,9 +404,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
         child: ClipRect(
           child: Container(
             height: barHeight,
-            padding: const EdgeInsets.only(
-              right: 15.0,
-            ),
+            padding: const EdgeInsets.only(right: 15.0),
             child: Icon(
               _latestValue.volume > 0 ? Icons.volume_up : Icons.volume_off,
               color: Colors.white,
@@ -422,10 +422,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
         height: barHeight,
         color: Colors.transparent,
         margin: const EdgeInsets.only(left: 8.0, right: 4.0),
-        padding: const EdgeInsets.only(
-          left: 12.0,
-          right: 12.0,
-        ),
+        padding: const EdgeInsets.only(left: 12.0, right: 12.0),
         child: AnimatedPlayPause(
           playing: controller.value.isPlaying,
           color: Colors.white,
@@ -434,16 +431,48 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
     );
   }
 
+  Widget _buildSkipForwardBackward({bool isForward = true}) {
+    return AnimatedOpacity(
+      opacity: notifier.hideStuff ? 0.0 : 1.0,
+      duration: const Duration(milliseconds: 300),
+      child: GestureDetector(
+        onTap: () => _skipForwardBackward(isForward: isForward),
+        child: Container(
+          height: barHeight,
+          color: Colors.transparent,
+          padding: const EdgeInsets.only(left: 6.0, right: 8.0),
+          margin: const EdgeInsets.only(right: 8.0),
+          child: Icon(
+            isForward ? CupertinoIcons.goforward_10 : CupertinoIcons.gobackward_10,
+            color: Colors.white,
+            size: chewieController.isFullScreen ? 30 : 24,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _skipForwardBackward({bool isForward = true}) {
+    _cancelAndRestartTimer();
+
+    if (isForward) {
+      final end = _latestValue.duration.inMilliseconds;
+      final skip = (_latestValue.position + const Duration(seconds: 10)).inMilliseconds;
+      controller.seekTo(Duration(milliseconds: math.min(skip, end)));
+    } else {
+      final beginning = Duration.zero.inMilliseconds;
+      final skip = (_latestValue.position - const Duration(seconds: 15)).inMilliseconds;
+      controller.seekTo(Duration(milliseconds: math.max(skip, beginning)));
+    }
+  }
+
   Widget _buildPosition(Color? iconColor) {
     final position = _latestValue.position;
     final duration = _latestValue.duration;
 
     return Text(
       '${formatDuration(position)} / ${formatDuration(duration)}',
-      style: const TextStyle(
-        fontSize: 14.0,
-        color: Colors.white,
-      ),
+      style: const TextStyle(fontSize: 12.0, color: Colors.white),
     );
   }
 
@@ -464,7 +493,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
   }
 
   Future<void> _initialize() async {
-    _subtitleOn = chewieController.subtitle?.isNotEmpty ?? false;
+    _subtitleOn = chewieController.showSubtitle;
     controller.addListener(_updateState);
 
     _updateState();
@@ -487,8 +516,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
       notifier.hideStuff = true;
 
       chewieController.toggleFullScreen();
-      _showAfterExpandCollapseTimer =
-          Timer(const Duration(milliseconds: 300), () {
+      _showAfterExpandCollapseTimer = Timer(const Duration(milliseconds: 300), () {
         setState(() {
           _cancelAndRestartTimer();
         });
@@ -522,9 +550,8 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
   }
 
   void _startHideTimer() {
-    final hideControlsTimer = chewieController.hideControlsTimer.isNegative
-        ? ChewieController.defaultHideControlsTimer
-        : chewieController.hideControlsTimer;
+    final hideControlsTimer =
+        chewieController.hideControlsTimer.isNegative ? ChewieController.defaultHideControlsTimer : chewieController.hideControlsTimer;
     _hideTimer = Timer(hideControlsTimer, () {
       setState(() {
         notifier.hideStuff = true;
@@ -560,7 +587,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
 
     setState(() {
       _latestValue = controller.value;
-      _subtitlesPosition = controller.value.position;
+      // _subtitlesPosition = controller.value.position;
     });
   }
 

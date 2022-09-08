@@ -1,5 +1,5 @@
 import 'package:chewie/src/chewie_player.dart';
-import 'package:chewie/src/helpers/adaptive_controls.dart';
+import 'package:chewie/src/material/material_desktop_controls.dart';
 import 'package:chewie/src/notifiers/index.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,9 +24,7 @@ class PlayerWithControls extends StatelessWidget {
       BuildContext context,
       ChewieController chewieController,
     ) {
-      return chewieController.showControls
-          ? chewieController.customControls ?? const AdaptiveControls()
-          : Container();
+      return chewieController.showControls ? chewieController.customControls ?? const MaterialDesktopControls() : Container();
     }
 
     Widget _buildPlayerWithControls(
@@ -35,8 +33,7 @@ class PlayerWithControls extends StatelessWidget {
     ) {
       return Stack(
         children: <Widget>[
-          if (chewieController.placeholder != null)
-            chewieController.placeholder!,
+          if (chewieController.placeholder != null) chewieController.placeholder!,
           InteractiveViewer(
             transformationController: chewieController.transformationController,
             maxScale: chewieController.maxScale,
@@ -44,9 +41,25 @@ class PlayerWithControls extends StatelessWidget {
             scaleEnabled: chewieController.zoomAndPan,
             child: Center(
               child: AspectRatio(
-                aspectRatio: chewieController.aspectRatio ??
-                    chewieController.videoPlayerController.value.aspectRatio,
-                child: VideoPlayer(chewieController.videoPlayerController),
+                aspectRatio: chewieController.aspectRatio ?? chewieController.videoPlayerController.value.aspectRatio,
+                child:
+                    //  DoubleTapPlayerView(
+                    //   doubleTapConfig: DoubleTapConfig.create(
+                    //     onDoubleTap: (lr) {
+                    //       // print('double tapped: $lr');
+                    //       if (lr == Lr.LEFT) {
+                    //         chewieController.videoPlayerController
+                    //             .seekTo(Duration(seconds: chewieController.videoPlayerController.value.position.inSeconds - 10));
+                    //       } else {
+                    //         chewieController.videoPlayerController
+                    //             .seekTo(Duration(seconds: chewieController.videoPlayerController.value.position.inSeconds + 10));
+                    //       }
+                    //     },
+                    //   ),
+                    //   swipeConfig: SwipeConfig.create(overlayBuilder: _overlay),
+                    //   child:
+                    VideoPlayer(chewieController.videoPlayerController),
+                // ),
               ),
             ),
           ),
@@ -62,10 +75,8 @@ class PlayerWithControls extends StatelessWidget {
                 visible: !notifier.hideStuff,
                 child: AnimatedOpacity(
                   opacity: notifier.hideStuff ? 0.0 : 0.8,
-                  duration: const Duration(
-                    milliseconds: 250,
-                  ),
-                  child: Container(
+                  duration: const Duration(milliseconds: 250),
+                  child: DecoratedBox(
                     decoration: const BoxDecoration(color: Colors.black54),
                     child: Container(),
                   ),
@@ -78,7 +89,7 @@ class PlayerWithControls extends StatelessWidget {
             SafeArea(
               bottom: false,
               child: _buildControls(context, chewieController),
-            ),
+            )
         ],
       );
     }
@@ -94,4 +105,31 @@ class PlayerWithControls extends StatelessWidget {
       ),
     );
   }
+
+  // Widget _overlay(SwipeData data) {
+  //   final dxDiff = (data.currentDx - data.startDx).toInt();
+  //   Duration diffDuration = Duration(seconds: dxDiff);
+  //   final prefix = diffDuration.isNegative ? '-' : '+';
+  //   final positionText = '$prefix${diffDuration.printDuration()}';
+  //   final aimedDuration = diffDuration + const Duration(minutes: 5);
+  //   final diffText = aimedDuration.printDuration();
+
+  //   return Center(
+  //     child: Column(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: [
+  //         Text(
+  //           positionText,
+  //           style: const TextStyle(fontSize: 30, color: Colors.white),
+  //         ),
+  //         const SizedBox(height: 4),
+  //         Text(
+  //           diffText,
+  //           style: const TextStyle(fontSize: 20, color: Colors.white),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
 }
