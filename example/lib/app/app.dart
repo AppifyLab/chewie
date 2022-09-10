@@ -143,7 +143,7 @@ class _ChewieDemoState extends State<ChewieDemo> {
       //     style: const TextStyle(color: Colors.black),
       //   ),
       // ),
-
+      showDownloadOption: true,
       hideControlsTimer: const Duration(seconds: 1),
       deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
       deviceOrientationsOnEnterFullScreen: [DeviceOrientation.portraitUp, DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft],
@@ -189,7 +189,7 @@ class _ChewieDemoState extends State<ChewieDemo> {
         body: Column(
           children: <Widget>[
             SizedBox(
-              height: 250,
+              height: 220,
               child: Center(
                 child: _chewieController != null && _chewieController!.videoPlayerController.value.isInitialized
                     ? Chewie(controller: _chewieController!)

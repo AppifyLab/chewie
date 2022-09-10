@@ -17,10 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 class MaterialDesktopControls extends StatefulWidget {
-  const MaterialDesktopControls({
-    this.showPlayButton = true,
-    Key? key,
-  }) : super(key: key);
+  const MaterialDesktopControls({this.showPlayButton = true, Key? key}) : super(key: key);
 
   final bool showPlayButton;
 
@@ -91,6 +88,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
                 )
               else
                 _buildHitArea(),
+              _buildTopBar(),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
 
@@ -148,18 +146,15 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
     super.didChangeDependencies();
   }
 
-  Widget _buildSubtitleToggle({IconData? icon, bool isPadded = false}) {
+  Widget _buildSubtitleToggle({bool isPadded = false}) {
     return IconButton(
       padding: isPadded ? const EdgeInsets.all(8.0) : EdgeInsets.zero,
-      icon: Icon(icon, color: _subtitleOn ? Colors.white : Colors.grey[700]),
+      icon: Icon(_subtitleOn ? Icons.subtitles : Icons.subtitles_off, color: Colors.white),
       onPressed: _onSubtitleTap,
     );
   }
 
-  Widget _buildOptionsButton({
-    IconData? icon,
-    bool isPadded = false,
-  }) {
+  Widget _buildOptionsButton({IconData? icon, bool isPadded = false}) {
     final options = <OptionItem>[
       OptionItem(
         onTap: () async {
@@ -242,9 +237,42 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
   //   );
   // }
 
-  AnimatedOpacity _buildBottomBar(
-    BuildContext context,
-  ) {
+  Widget _buildTopBar() {
+    return Positioned(
+      top: 0,
+      right: 0,
+      child: SafeArea(
+        child: AnimatedOpacity(
+          opacity: notifier.hideStuff ? 0.0 : 1.0,
+          duration: const Duration(milliseconds: 250),
+          child: Row(
+            children: [
+              // TODO :: Add showDownloadOption in controller
+              if (chewieController.showDownloadOption) _buildDownloadButton(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDownloadButton() {
+    return GestureDetector(
+      onTap: () {
+        // TODO :: Add onTapDownload() to chewie controller
+        // chewieController.onTapDownload();
+      },
+      child: Container(
+        height: barHeight,
+        color: Colors.transparent,
+        margin: const EdgeInsets.only(left: 8.0, right: 4.0),
+        padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+        child: const Icon(CupertinoIcons.cloud_download, color: Colors.white),
+      ),
+    );
+  }
+
+  AnimatedOpacity _buildBottomBar(BuildContext context) {
     final iconColor = Theme.of(context).textTheme.button!.color;
 
     return AnimatedOpacity(
@@ -267,7 +295,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
                     _buildMuteButton(controller),
                     if (chewieController.isLive) const Expanded(child: Text('LIVE')) else _buildPosition(iconColor),
                     const Spacer(),
-                    if (chewieController.showControls && chewieController.showSubtitle) _buildSubtitleToggle(icon: Icons.subtitles),
+                    if (chewieController.showControls && chewieController.showSubtitle) _buildSubtitleToggle(),
                     if (chewieController.showOptions) _buildOptionsButton(icon: Icons.settings),
                     if (chewieController.allowFullScreen) _buildExpandButton(),
                   ],
@@ -384,9 +412,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
     }
   }
 
-  GestureDetector _buildMuteButton(
-    VideoPlayerController controller,
-  ) {
+  GestureDetector _buildMuteButton(VideoPlayerController controller) {
     return GestureDetector(
       onTap: () {
         _cancelAndRestartTimer();
@@ -466,13 +492,27 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
     }
   }
 
+  bool showRemainingDuration = false;
+
   Widget _buildPosition(Color? iconColor) {
     final position = _latestValue.position;
     final duration = _latestValue.duration;
 
-    return Text(
-      '${formatDuration(position)} / ${formatDuration(duration)}',
-      style: const TextStyle(fontSize: 12.0, color: Colors.white),
+    final durationRemaining = duration - position;
+
+    return InkWell(
+      onTap: () {
+        // print('showRemainingDuration =  $showRemainingDuration');
+        setState(() {
+          showRemainingDuration = !showRemainingDuration;
+        });
+      },
+      child: Text(
+        showRemainingDuration
+            ? '-${formatDuration(durationRemaining)} / ${formatDuration(duration)}'
+            : '${formatDuration(position)} / ${formatDuration(duration)}',
+        style: const TextStyle(fontSize: 12.0, color: Colors.white),
+      ),
     );
   }
 

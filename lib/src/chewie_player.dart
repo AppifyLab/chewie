@@ -24,10 +24,7 @@ typedef ChewieRoutePageBuilder = Widget Function(
 /// `video_player` is pretty low level. Chewie wraps it in a friendly skin to
 /// make it easy to use!
 class Chewie extends StatefulWidget {
-  const Chewie({
-    Key? key,
-    required this.controller,
-  }) : super(key: key);
+  const Chewie({Key? key, required this.controller}) : super(key: key);
 
   /// The [ChewieController]
   final ChewieController controller;
@@ -92,11 +89,7 @@ class ChewieState extends State<Chewie> {
     );
   }
 
-  Widget _buildFullScreenVideo(
-    BuildContext context,
-    Animation<double> animation,
-    ChewieControllerProvider controllerProvider,
-  ) {
+  Widget _buildFullScreenVideo(BuildContext context, Animation<double> animation, ChewieControllerProvider controllerProvider) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
@@ -267,6 +260,8 @@ class ChewieController extends ChangeNotifier {
     // this.subtitle,
     // this.subtitleBuilder,
     this.showSubtitle = true,
+    this.showDownloadOption = false,
+    this.onTapDownload,
     this.customControls,
     this.errorBuilder,
     this.allowedScreenSleep = true,
@@ -313,6 +308,9 @@ class ChewieController extends ChangeNotifier {
     double? maxScale,
     Subtitles? subtitle,
     Widget Function(BuildContext, dynamic)? subtitleBuilder,
+    bool? showSubtitle,
+    bool? showDownloadOption,
+    Function()? onTapDownload,
     Widget? customControls,
     Widget Function(BuildContext, String)? errorBuilder,
     bool? allowedScreenSleep,
@@ -356,7 +354,9 @@ class ChewieController extends ChangeNotifier {
       showControls: showControls ?? this.showControls,
       // subtitle: subtitle ?? this.subtitle,
       // subtitleBuilder: subtitleBuilder ?? this.subtitleBuilder,
-      showSubtitle: showSubtitle,
+      showSubtitle: showSubtitle ?? this.showSubtitle,
+      showDownloadOption: showDownloadOption ?? this.showDownloadOption,
+      onTapDownload: onTapDownload ?? this.onTapDownload,
       customControls: customControls ?? this.customControls,
       errorBuilder: errorBuilder ?? this.errorBuilder,
       allowedScreenSleep: allowedScreenSleep ?? this.allowedScreenSleep,
@@ -412,6 +412,12 @@ class ChewieController extends ChangeNotifier {
 
   /// Whether to show subtitles toggle control icon button
   final bool showSubtitle;
+
+  /// Whether to show donwload icon button
+  final bool showDownloadOption;
+
+  /// Add some custom action on tapping download button
+  Function()? onTapDownload;
 
   /// The controller for the video you want to play
   final VideoPlayerController videoPlayerController;
