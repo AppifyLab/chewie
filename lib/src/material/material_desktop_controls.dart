@@ -247,7 +247,6 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
           duration: const Duration(milliseconds: 250),
           child: Row(
             children: [
-              // TODO :: Add showDownloadOption in controller
               if (chewieController.showDownloadOption) _buildDownloadButton(),
             ],
           ),
@@ -259,8 +258,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
   Widget _buildDownloadButton() {
     return GestureDetector(
       onTap: () {
-        // TODO :: Add onTapDownload() to chewie controller
-        // chewieController.onTapDownload();
+        chewieController.onTapDownload!();
       },
       child: Container(
         height: barHeight,
