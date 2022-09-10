@@ -20,17 +20,11 @@ class PlayerWithControls extends StatelessWidget {
       return width > height ? width / height : height / width;
     }
 
-    Widget _buildControls(
-      BuildContext context,
-      ChewieController chewieController,
-    ) {
+    Widget _buildControls(BuildContext context, ChewieController chewieController) {
       return chewieController.showControls ? chewieController.customControls ?? const MaterialDesktopControls() : Container();
     }
 
-    Widget _buildPlayerWithControls(
-      ChewieController chewieController,
-      BuildContext context,
-    ) {
+    Widget _buildPlayerWithControls(ChewieController chewieController, BuildContext context) {
       return Stack(
         children: <Widget>[
           if (chewieController.placeholder != null) chewieController.placeholder!,

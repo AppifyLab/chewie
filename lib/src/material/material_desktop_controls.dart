@@ -82,12 +82,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
           absorbing: notifier.hideStuff,
           child: Stack(
             children: [
-              if (_displayBufferingIndicator)
-                const Center(
-                  child: CircularProgressIndicator(),
-                )
-              else
-                _buildHitArea(),
+              if (_displayBufferingIndicator) const Center(child: CircularProgressIndicator()) else _buildHitArea(),
               _buildTopBar(),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -349,42 +344,46 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
     final bool isFinished = _latestValue.position >= _latestValue.duration;
     final bool showPlayButton = widget.showPlayButton && !_dragging && !notifier.hideStuff;
 
-    return Row(
-      children: [
-        const Spacer(),
-        _buildSkipForwardBackward(isForward: false),
-        const Spacer(),
-        GestureDetector(
-          onTap: () {
-            if (_latestValue.isPlaying) {
-              if (_displayTapped) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      color: notifier.hideStuff ? Colors.transparent : Colors.black.withOpacity(0.5),
+      child: Row(
+        children: [
+          const Spacer(),
+          _buildSkipForwardBackward(isForward: false),
+          const Spacer(),
+          GestureDetector(
+            onTap: () {
+              if (_latestValue.isPlaying) {
+                if (_displayTapped) {
+                  setState(() {
+                    notifier.hideStuff = true;
+                  });
+                } else {
+                  _cancelAndRestartTimer();
+                }
+              } else {
+                _playPause();
+
                 setState(() {
                   notifier.hideStuff = true;
                 });
-              } else {
-                _cancelAndRestartTimer();
               }
-            } else {
-              _playPause();
-
-              setState(() {
-                notifier.hideStuff = true;
-              });
-            }
-          },
-          child: CenterPlayButton(
-            backgroundColor: Colors.black54,
-            iconColor: Colors.white,
-            isFinished: isFinished,
-            isPlaying: controller.value.isPlaying,
-            show: showPlayButton,
-            onPressed: _playPause,
+            },
+            child: CenterPlayButton(
+              backgroundColor: Colors.black54,
+              iconColor: Colors.white,
+              isFinished: isFinished,
+              isPlaying: controller.value.isPlaying,
+              show: showPlayButton,
+              onPressed: _playPause,
+            ),
           ),
-        ),
-        const Spacer(),
-        _buildSkipForwardBackward(),
-        const Spacer(),
-      ],
+          const Spacer(),
+          _buildSkipForwardBackward(),
+          const Spacer(),
+        ],
+      ),
     );
   }
 
