@@ -80,7 +80,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
     /// Mark video is buffering if video has not ended, has no error,
     /// and position is equal to buffered duration.
 
-    _isBuffering = _chewieController!.videoPlayerController.value.position == _chewieController!.videoPlayerController.value.duration &&
+    _isBuffering = _chewieController!.videoPlayerController.value.position != _chewieController!.videoPlayerController.value.duration &&
         !_chewieController!.videoPlayerController.value.hasError &&
         _chewieController!.videoPlayerController.value.buffered.isNotEmpty == true &&
         _chewieController!.videoPlayerController.value.position.inSeconds >= _chewieController!.videoPlayerController.value.buffered[0].end.inSeconds;
