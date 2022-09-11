@@ -262,6 +262,8 @@ class ChewieController extends ChangeNotifier {
     this.showSubtitle = true,
     this.showDownloadOption = false,
     this.onTapDownload,
+    this.showAutoPlaySwitch = false,
+    this.onSwitchedAutoPlay,
     this.customControls,
     this.errorBuilder,
     this.allowedScreenSleep = true,
@@ -311,6 +313,8 @@ class ChewieController extends ChangeNotifier {
     bool? showSubtitle,
     bool? showDownloadOption,
     Function()? onTapDownload,
+    bool? showAutoPlaySwitch,
+    Function()? onSwitchedAutoPlay,
     Widget? customControls,
     Widget Function(BuildContext, String)? errorBuilder,
     bool? allowedScreenSleep,
@@ -357,6 +361,8 @@ class ChewieController extends ChangeNotifier {
       showSubtitle: showSubtitle ?? this.showSubtitle,
       showDownloadOption: showDownloadOption ?? this.showDownloadOption,
       onTapDownload: onTapDownload ?? this.onTapDownload,
+      showAutoPlaySwitch: showAutoPlaySwitch ?? this.showAutoPlaySwitch,
+      onSwitchedAutoPlay: onSwitchedAutoPlay ?? this.onSwitchedAutoPlay,
       customControls: customControls ?? this.customControls,
       errorBuilder: errorBuilder ?? this.errorBuilder,
       allowedScreenSleep: allowedScreenSleep ?? this.allowedScreenSleep,
@@ -416,8 +422,14 @@ class ChewieController extends ChangeNotifier {
   /// Whether to show donwload icon button
   final bool showDownloadOption;
 
+  /// Whether to show auto play switch button
+  final bool showAutoPlaySwitch;
+
   /// Add some custom action on tapping download button
   Function()? onTapDownload;
+
+  /// Add some custom action on switching play-pause option
+  Function()? onSwitchedAutoPlay;
 
   /// The controller for the video you want to play
   final VideoPlayerController videoPlayerController;

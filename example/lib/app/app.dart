@@ -7,10 +7,7 @@ import 'package:http/http.dart';
 import 'package:video_player/video_player.dart';
 
 class ChewieDemo extends StatefulWidget {
-  const ChewieDemo({
-    Key? key,
-    this.title = 'Chewie Demo',
-  }) : super(key: key);
+  const ChewieDemo({Key? key, this.title = 'Chewie Demo'}) : super(key: key);
 
   final String title;
 
@@ -145,6 +142,8 @@ class _ChewieDemoState extends State<ChewieDemo> {
       //   ),
       // ),
       showDownloadOption: true,
+      showAutoPlaySwitch: true,
+      onSwitchedAutoPlay: () {},
       hideControlsTimer: const Duration(seconds: 1),
       deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
       deviceOrientationsOnEnterFullScreen: [DeviceOrientation.portraitUp, DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft],

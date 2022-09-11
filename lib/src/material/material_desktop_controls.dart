@@ -7,6 +7,7 @@ import 'package:chewie/src/chewie_player.dart';
 import 'package:chewie/src/chewie_progress_colors.dart';
 import 'package:chewie/src/helpers/utils.dart';
 import 'package:chewie/src/material/material_progress_bar.dart';
+import 'package:chewie/src/material/widgets/custom_switch_button.dart';
 import 'package:chewie/src/material/widgets/options_dialog.dart';
 import 'package:chewie/src/material/widgets/playback_speed_dialog.dart';
 import 'package:chewie/src/models/option_item.dart';
@@ -28,6 +29,7 @@ class MaterialDesktopControls extends StatefulWidget {
 }
 
 class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with SingleTickerProviderStateMixin {
+  final _autoPlaySwitchController = ValueNotifier<bool>(false);
   late PlayerNotifier notifier;
   late VideoPlayerValue _latestValue;
   double? _latestVolume;
@@ -39,7 +41,11 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
   bool _dragging = false;
   bool _displayTapped = false;
   Timer? _bufferingDisplayTimer;
-  bool _displayBufferingIndicator = false;
+  // bool _displayBufferingIndicator = false;
+
+  /// Mark video is buffering if video has not ended, has no error,
+  ///  and position is equal to buffered duration.
+  bool _isBuffering = false;
 
   final barHeight = 48.0 * 1.5;
   final marginSize = 5.0;
@@ -54,10 +60,24 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
   void initState() {
     super.initState();
     notifier = Provider.of<PlayerNotifier>(context, listen: false);
+    onSwitchedAutoplay();
+  }
+
+  Future<void> onSwitchedAutoplay() async {
+    await Future<dynamic>.delayed(const Duration(seconds: 1));
+
+    if (chewieController.showAutoPlaySwitch) {
+      _autoPlaySwitchController.addListener(() {
+        chewieController.onSwitchedAutoPlay!();
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    _isBuffering = _chewieController!.videoPlayerController.value.buffered.isNotEmpty == true &&
+        _chewieController!.videoPlayerController.value.position.inSeconds >= _chewieController!.videoPlayerController.value.buffered[0].end.inSeconds;
+
     if (_latestValue.hasError) {
       return chewieController.errorBuilder?.call(
             context,
@@ -82,7 +102,8 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
           absorbing: notifier.hideStuff,
           child: Stack(
             children: [
-              if (_displayBufferingIndicator) const Center(child: CircularProgressIndicator()) else _buildHitArea(),
+              if (_isBuffering) const Center(child: CircularProgressIndicator()) else _buildHitArea(),
+              // if (_displayBufferingIndicator) const Center(child: CircularProgressIndicator()) else _buildHitArea(),
               _buildTopBar(),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -242,9 +263,34 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
           duration: const Duration(milliseconds: 250),
           child: Row(
             children: [
+              if (chewieController.showAutoPlaySwitch) _buildAutoPlaySwitchButton(),
               if (chewieController.showDownloadOption) _buildDownloadButton(),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAutoPlaySwitchButton() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: AdvancedSwitch(
+        controller: _autoPlaySwitchController,
+        activeColor: Colors.white.withOpacity(0.2),
+        inactiveColor: Colors.white.withOpacity(0.2),
+        height: 20,
+        width: 40,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        thumb: ValueListenableBuilder(
+          valueListenable: _autoPlaySwitchController,
+          builder: (_, bool value, __) {
+            return Icon(
+              value ? Icons.play_arrow : Icons.pause_outlined,
+              color: value ? Colors.black : Colors.black45,
+              size: value ? 16 : 14,
+            );
+          },
         ),
       ),
     );
@@ -597,7 +643,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
   }
 
   void _bufferingTimerTimeout() {
-    _displayBufferingIndicator = true;
+    // _displayBufferingIndicator = true;
     if (mounted) {
       setState(() {});
     }
@@ -616,10 +662,10 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
       } else {
         _bufferingDisplayTimer?.cancel();
         _bufferingDisplayTimer = null;
-        _displayBufferingIndicator = false;
+        // _displayBufferingIndicator = false;
       }
     } else {
-      _displayBufferingIndicator = controller.value.isBuffering;
+      // _displayBufferingIndicator = controller.value.isBuffering;
     }
 
     setState(() {
