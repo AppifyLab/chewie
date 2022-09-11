@@ -263,6 +263,7 @@ class ChewieController extends ChangeNotifier {
     this.showDownloadOption = false,
     this.onTapDownload,
     this.showAutoPlaySwitch = false,
+    this.onInitAutoPlay = true,
     this.onSwitchedAutoPlay,
     this.customControls,
     this.errorBuilder,
@@ -314,6 +315,7 @@ class ChewieController extends ChangeNotifier {
     bool? showDownloadOption,
     Function()? onTapDownload,
     bool? showAutoPlaySwitch,
+    bool? onInitAutoPlay,
     // Function()? onSwitchedAutoPlay,
     ValueChanged<bool>? onSwitchedAutoPlay,
     Widget? customControls,
@@ -364,6 +366,7 @@ class ChewieController extends ChangeNotifier {
       onTapDownload: onTapDownload ?? this.onTapDownload,
       showAutoPlaySwitch: showAutoPlaySwitch ?? this.showAutoPlaySwitch,
       onSwitchedAutoPlay: onSwitchedAutoPlay ?? this.onSwitchedAutoPlay,
+      onInitAutoPlay: onInitAutoPlay ?? this.onInitAutoPlay,
       customControls: customControls ?? this.customControls,
       errorBuilder: errorBuilder ?? this.errorBuilder,
       allowedScreenSleep: allowedScreenSleep ?? this.allowedScreenSleep,
@@ -423,11 +426,14 @@ class ChewieController extends ChangeNotifier {
   /// Whether to show donwload icon button
   final bool showDownloadOption;
 
+  /// Add some custom action on tapping download button
+  Function()? onTapDownload;
+
   /// Whether to show auto play switch button
   final bool showAutoPlaySwitch;
 
-  /// Add some custom action on tapping download button
-  Function()? onTapDownload;
+  /// Show initially list autplay set true/false
+  final bool onInitAutoPlay;
 
   /// Add some custom action on switching play-pause option
   ValueChanged<bool>? onSwitchedAutoPlay;

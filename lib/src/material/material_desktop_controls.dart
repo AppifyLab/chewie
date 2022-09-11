@@ -66,6 +66,8 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
   Future<void> onSwitchedAutoplay() async {
     await Future<dynamic>.delayed(const Duration(seconds: 1));
 
+    _autoPlaySwitchController.value = chewieController.onInitAutoPlay;
+
     if (chewieController.showAutoPlaySwitch) {
       _autoPlaySwitchController.addListener(() {
         chewieController.onSwitchedAutoPlay!(_autoPlaySwitchController.value);
