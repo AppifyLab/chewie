@@ -83,15 +83,14 @@ class _VideoProgressBarState extends State<VideoProgressBar> {
         if (!controller.value.isInitialized) {
           return;
         }
-        // Should only seek if it's not running on Android, or if it is,
-        // then the VideoPlayerController cannot be buffering.
-        // On Android, we need to let the player buffer when scrolling
-        // in order to let the player buffer. https://github.com/flutter/flutter/issues/101409
-        final shouldSeekToRelativePosition =
-            !Platform.isAndroid || !controller.value.isBuffering;
-        if (shouldSeekToRelativePosition) {
-          _seekToRelativePosition(details.globalPosition);
-        }
+        // // Should only seek if it's not running on Android, or if it is,
+        // // then the VideoPlayerController cannot be buffering.
+        // // On Android, we need to let the player buffer when scrolling
+        // // in order to let the player buffer. https://github.com/flutter/flutter/issues/101409
+        // final shouldSeekToRelativePosition = !Platform.isAndroid || !controller.value.isBuffering;
+        // if (shouldSeekToRelativePosition) {
+        _seekToRelativePosition(details.globalPosition);
+        // }
 
         widget.onDragUpdate?.call();
       },
@@ -166,10 +165,8 @@ class _ProgressBarPainter extends CustomPainter {
     if (!value.isInitialized) {
       return;
     }
-    final double playedPartPercent =
-        value.position.inMilliseconds / value.duration.inMilliseconds;
-    final double playedPart =
-        playedPartPercent > 1 ? size.width : playedPartPercent * size.width;
+    final double playedPartPercent = value.position.inMilliseconds / value.duration.inMilliseconds;
+    final double playedPart = playedPartPercent > 1 ? size.width : playedPartPercent * size.width;
     for (final DurationRange range in value.buffered) {
       final double start = range.startFraction(value.duration) * size.width;
       final double end = range.endFraction(value.duration) * size.width;
