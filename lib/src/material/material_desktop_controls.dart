@@ -68,7 +68,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
 
     if (chewieController.showAutoPlaySwitch) {
       _autoPlaySwitchController.addListener(() {
-        chewieController.onSwitchedAutoPlay!();
+        chewieController.onSwitchedAutoPlay!(_autoPlaySwitchController.value);
       });
     }
   }

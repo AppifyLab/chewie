@@ -143,7 +143,9 @@ class _ChewieDemoState extends State<ChewieDemo> {
       // ),
       showDownloadOption: true,
       showAutoPlaySwitch: true,
-      onSwitchedAutoPlay: () {},
+      onSwitchedAutoPlay: (value) {
+        print('value = $value');
+      },
       hideControlsTimer: const Duration(seconds: 1),
       deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
       deviceOrientationsOnEnterFullScreen: [DeviceOrientation.portraitUp, DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft],

@@ -314,7 +314,8 @@ class ChewieController extends ChangeNotifier {
     bool? showDownloadOption,
     Function()? onTapDownload,
     bool? showAutoPlaySwitch,
-    Function()? onSwitchedAutoPlay,
+    // Function()? onSwitchedAutoPlay,
+    ValueChanged<bool>? onSwitchedAutoPlay,
     Widget? customControls,
     Widget Function(BuildContext, String)? errorBuilder,
     bool? allowedScreenSleep,
@@ -429,7 +430,7 @@ class ChewieController extends ChangeNotifier {
   Function()? onTapDownload;
 
   /// Add some custom action on switching play-pause option
-  Function()? onSwitchedAutoPlay;
+  ValueChanged<bool>? onSwitchedAutoPlay;
 
   /// The controller for the video you want to play
   final VideoPlayerController videoPlayerController;
