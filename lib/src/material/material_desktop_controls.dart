@@ -174,6 +174,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
   Widget _buildSubtitleToggle({bool isPadded = false}) {
     return IconButton(
       padding: isPadded ? const EdgeInsets.all(8.0) : EdgeInsets.zero,
+      visualDensity: VisualDensity.compact,
       icon: Icon(_subtitleOn ? Icons.subtitles : Icons.subtitles_off, color: Colors.white),
       onPressed: _onSubtitleTap,
     );
@@ -200,6 +201,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
       duration: const Duration(milliseconds: 250),
       child: IconButton(
         padding: isPadded ? const EdgeInsets.all(8.0) : EdgeInsets.zero,
+        visualDensity: VisualDensity.compact,
         onPressed: () async {
           _hideTimer?.cancel();
 
@@ -314,7 +316,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
         height: barHeight,
         color: Colors.transparent,
         margin: const EdgeInsets.only(left: 8.0, right: 4.0),
-        padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+        padding: const EdgeInsets.only(left: 10, right: 10),
         child: const Icon(CupertinoIcons.cloud_download, color: Colors.white),
       ),
     );
@@ -379,11 +381,8 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
         duration: const Duration(milliseconds: 300),
         child: Container(
           height: barHeight + (chewieController.isFullScreen ? 15.0 : 0),
-          margin: const EdgeInsets.only(right: 12.0),
-          padding: const EdgeInsets.only(
-            left: 8.0,
-            right: 8.0,
-          ),
+          margin: const EdgeInsets.only(right: 10),
+          padding: const EdgeInsets.only(left: 4, right: 6),
           child: Center(
             child: Icon(
               chewieController.isFullScreen ? Icons.fullscreen_exit : Icons.fullscreen,
@@ -482,7 +481,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
         child: ClipRect(
           child: Container(
             height: barHeight,
-            padding: const EdgeInsets.only(right: 15.0),
+            padding: const EdgeInsets.only(right: 12.0),
             child: Icon(
               _latestValue.volume > 0 ? Icons.volume_up : Icons.volume_off,
               color: Colors.white,
@@ -500,7 +499,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
         height: barHeight,
         color: Colors.transparent,
         margin: const EdgeInsets.only(left: 8.0, right: 4.0),
-        padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+        padding: const EdgeInsets.only(left: 10, right: 10),
         child: AnimatedPlayPause(
           playing: controller.value.isPlaying,
           color: Colors.white,
