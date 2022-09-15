@@ -85,11 +85,11 @@ class _ChewieDemoState extends State<ChewieDemo> {
       onSwitchedAutoPlay: (value) {
         // print('value = $value');
       },
-      // sectionDurationRange: [
-      //   DurationRange(Duration.zero, const Duration(seconds: 20)),
-      //   DurationRange(const Duration(seconds: 20), const Duration(seconds: 50)),
-      //   DurationRange(const Duration(seconds: 50), const Duration(seconds: 163)),
-      // ],
+      sectionDurationRange: [
+        DurationRange(Duration.zero, const Duration(seconds: 20)),
+        DurationRange(const Duration(seconds: 20), const Duration(seconds: 50)),
+        DurationRange(const Duration(seconds: 50), const Duration(seconds: 163)),
+      ],
       hideControlsTimer: const Duration(seconds: 1),
       deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
       deviceOrientationsOnEnterFullScreen: [DeviceOrientation.portraitUp, DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft],

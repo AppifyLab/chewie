@@ -12,6 +12,7 @@ import 'package:chewie/src/material/widgets/options_dialog.dart';
 import 'package:chewie/src/material/widgets/playback_speed_dialog.dart';
 import 'package:chewie/src/models/option_item.dart';
 import 'package:chewie/src/notifiers/index.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +40,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
   bool _subtitleOn = false;
   Timer? _showAfterExpandCollapseTimer;
   bool _dragging = false;
+  double tempX = 0;
   bool _displayTapped = false;
   Timer? _bufferingDisplayTimer;
   // bool _displayBufferingIndicator = false;
@@ -134,9 +136,35 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
                         textStyle: const TextStyle(fontSize: 14, color: Colors.white),
                       ),
                     ),
+                  // on hover thumbnail preview container
+
                   _buildBottomBar(context),
                 ],
               ),
+              //  _latestValue.position.inSeconds
+              if (_dragging &&
+                  chewieController.sectionDurationRange != null &&
+                  chewieController.sectionDurationRange!
+                          .indexWhere((element) => _latestValue.position >= element.start && _latestValue.position <= element.end) !=
+                      -1)
+                Positioned(
+                  bottom: 65,
+                  left: tempX,
+                  child: Column(
+                    children: [
+                      Text(
+                        'Section ${chewieController.sectionDurationRange!.indexWhere((element) => _latestValue.position >= element.start && _latestValue.position <= element.end)}',
+                        style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        formatDuration(_latestValue.position),
+                        style: const TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w500),
+                      ),
+                      // FlickCurrentPosition(color: KColor.grey300const),
+                    ],
+                  ),
+                ),
             ],
           ),
         ),
@@ -692,6 +720,17 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
           });
 
           _hideTimer?.cancel();
+        },
+        onDragUpdate: () {
+          var pos = controller.value.position.inSeconds;
+          var dur = controller.value.duration.inSeconds;
+          tempX = pos / dur;
+          tempX *= MediaQuery.of(context).size.width - 80;
+
+          print('pos = $pos');
+          print('dur = $dur');
+          print('tempX = $tempX');
+          setState(() {});
         },
         onDragEnd: () {
           setState(() {
