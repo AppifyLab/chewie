@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:chewie/src/chewie_progress_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -15,6 +13,7 @@ class VideoProgressBar extends StatefulWidget {
     required this.barHeight,
     required this.handleHeight,
     required this.drawShadow,
+    required this.durationRange,
   })  : colors = colors ?? ChewieProgressColors(),
         super(key: key);
 
@@ -27,6 +26,8 @@ class VideoProgressBar extends StatefulWidget {
   final double barHeight;
   final double handleHeight;
   final bool drawShadow;
+
+  final List<DurationRange> durationRange;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -113,12 +114,13 @@ class _VideoProgressBarState extends State<VideoProgressBar> {
           width: MediaQuery.of(context).size.width,
           color: Colors.transparent,
           child: CustomPaint(
-            painter: _ProgressBarPainter(
+            painter: _TestProgressBarPainter(
               value: controller.value,
               colors: widget.colors,
               barHeight: widget.barHeight,
               handleHeight: widget.handleHeight,
               drawShadow: widget.drawShadow,
+              durationRange: widget.durationRange,
             ),
           ),
         ),
@@ -127,13 +129,14 @@ class _VideoProgressBarState extends State<VideoProgressBar> {
   }
 }
 
-class _ProgressBarPainter extends CustomPainter {
-  _ProgressBarPainter({
+class _TestProgressBarPainter extends CustomPainter {
+  _TestProgressBarPainter({
     required this.value,
     required this.colors,
     required this.barHeight,
     required this.handleHeight,
     required this.drawShadow,
+    required this.durationRange,
   });
 
   VideoPlayerValue value;
@@ -142,6 +145,7 @@ class _ProgressBarPainter extends CustomPainter {
   final double barHeight;
   final double handleHeight;
   final bool drawShadow;
+  final List<DurationRange> durationRange;
 
   @override
   bool shouldRepaint(CustomPainter painter) {
@@ -162,14 +166,18 @@ class _ProgressBarPainter extends CustomPainter {
       ),
       colors.backgroundPaint,
     );
+
     if (!value.isInitialized) {
       return;
     }
+
     final double playedPartPercent = value.position.inMilliseconds / value.duration.inMilliseconds;
     final double playedPart = playedPartPercent > 1 ? size.width : playedPartPercent * size.width;
+
     for (final DurationRange range in value.buffered) {
       final double start = range.startFraction(value.duration) * size.width;
       final double end = range.endFraction(value.duration) * size.width;
+
       canvas.drawRRect(
         RRect.fromRectAndRadius(
           Rect.fromPoints(
@@ -181,27 +189,62 @@ class _ProgressBarPainter extends CustomPainter {
         colors.bufferedPaint,
       );
     }
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromPoints(
-          Offset(0.0, baseOffset),
-          Offset(playedPart, baseOffset + barHeight),
-        ),
-        const Radius.circular(4.0),
-      ),
-      colors.playedPaint,
-    );
-
-    if (drawShadow) {
-      final Path shadowPath = Path()
-        ..addOval(
-          Rect.fromCircle(
-            center: Offset(playedPart, baseOffset + barHeight / 2),
-            radius: handleHeight,
+    if (durationRange.isEmpty) {
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromPoints(
+            Offset(0.0, baseOffset),
+            Offset(playedPart, baseOffset + barHeight),
           ),
+          const Radius.circular(4.0),
+        ),
+        colors.playedPaint,
+      );
+    } else {
+      for (int j = 0; j < durationRange.length; j++) {
+        final DurationRange range = durationRange[j];
+        final double start = range.startFraction(value.duration) * size.width;
+        final double end = range.endFraction(value.duration) * size.width;
+
+        /// Played part bar
+        canvas.drawRRect(
+          RRect.fromRectAndRadius(
+            Rect.fromPoints(
+              Offset(start, baseOffset),
+              Offset(playedPart, playedPart >= start && playedPart <= end ? baseOffset + 6 : baseOffset + barHeight),
+            ),
+            const Radius.circular(4),
+          ),
+          Paint()..color = value.position >= range.start && value.position <= range.end ? Colors.red : Colors.transparent,
         );
 
-      canvas.drawShadow(shadowPath, Colors.black, 0.2, false);
+        /// Playing section bar
+        canvas.drawRRect(
+          RRect.fromRectAndRadius(
+            Rect.fromPoints(
+              Offset(playedPart, baseOffset),
+              Offset(end, playedPart >= start && playedPart <= end ? baseOffset + 6 : baseOffset + barHeight),
+            ),
+            const Radius.circular(4),
+          ),
+          Paint()..color = value.position >= range.start && value.position <= range.end ? Colors.white.withOpacity(0.9) : Colors.transparent,
+        );
+      }
+    }
+
+    /// General progress bar
+    for (int i = 0; i < durationRange.length; i++) {
+      final DurationRange range = durationRange[i];
+      final double start = range.startFraction(value.duration) * size.width;
+      final double end = range.endFraction(value.duration) * size.width;
+
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromPoints(Offset(start, baseOffset), Offset(end - 2.5, baseOffset + barHeight)),
+          const Radius.circular(4),
+        ),
+        Paint()..color = value.position >= range.end ? Colors.red : Colors.white12,
+      );
     }
 
     canvas.drawCircle(
@@ -211,3 +254,89 @@ class _ProgressBarPainter extends CustomPainter {
     );
   }
 }
+
+
+// class _ProgressBarPainter extends CustomPainter {
+//   _ProgressBarPainter({
+//     required this.value,
+//     required this.colors,
+//     required this.barHeight,
+//     required this.handleHeight,
+//     required this.drawShadow,
+//   });
+
+//   VideoPlayerValue value;
+//   ChewieProgressColors colors;
+
+//   final double barHeight;
+//   final double handleHeight;
+//   final bool drawShadow;
+
+//   @override
+//   bool shouldRepaint(CustomPainter painter) {
+//     return true;
+//   }
+
+//   @override
+//   void paint(Canvas canvas, Size size) {
+//     final baseOffset = size.height / 2 - barHeight / 2;
+
+//     canvas.drawRRect(
+//       RRect.fromRectAndRadius(
+//         Rect.fromPoints(
+//           Offset(0.0, baseOffset),
+//           Offset(size.width, baseOffset + barHeight),
+//         ),
+//         const Radius.circular(4.0),
+//       ),
+//       colors.backgroundPaint,
+//     );
+//     if (!value.isInitialized) {
+//       return;
+//     }
+//     final double playedPartPercent = value.position.inMilliseconds / value.duration.inMilliseconds;
+//     final double playedPart = playedPartPercent > 1 ? size.width : playedPartPercent * size.width;
+//     for (final DurationRange range in value.buffered) {
+//       final double start = range.startFraction(value.duration) * size.width;
+//       final double end = range.endFraction(value.duration) * size.width;
+//       canvas.drawRRect(
+//         RRect.fromRectAndRadius(
+//           Rect.fromPoints(
+//             Offset(start, baseOffset),
+//             Offset(end, baseOffset + barHeight),
+//           ),
+//           const Radius.circular(4.0),
+//         ),
+//         colors.bufferedPaint,
+//       );
+//     }
+//     canvas.drawRRect(
+//       RRect.fromRectAndRadius(
+//         Rect.fromPoints(
+//           Offset(0.0, baseOffset),
+//           Offset(playedPart, baseOffset + barHeight),
+//         ),
+//         const Radius.circular(4.0),
+//       ),
+//       colors.playedPaint,
+//     );
+
+//     if (drawShadow) {
+//       final Path shadowPath = Path()
+//         ..addOval(
+//           Rect.fromCircle(
+//             center: Offset(playedPart, baseOffset + barHeight / 2),
+//             radius: handleHeight,
+//           ),
+//         );
+
+//       canvas.drawShadow(shadowPath, Colors.black, 0.2, false);
+//     }
+
+//     canvas.drawCircle(
+//       Offset(playedPart, baseOffset + barHeight / 2),
+//       handleHeight,
+//       colors.handlePaint,
+//     );
+//   }
+// }

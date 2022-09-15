@@ -707,6 +707,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
               bufferedColor: Theme.of(context).backgroundColor.withOpacity(0.5),
               backgroundColor: Theme.of(context).disabledColor.withOpacity(.5),
             ),
+        sectionDurationRange: chewieController.sectionDurationRange,
       ),
     );
   }

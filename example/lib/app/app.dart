@@ -66,61 +66,11 @@ class _ChewieDemoState extends State<ChewieDemo> {
   }
 
   void _createChewieController() {
-    // final subtitles = [
-    //     Subtitle(
-    //       index: 0,
-    //       start: Duration.zero,
-    //       end: const Duration(seconds: 10),
-    //       text: 'Hello from subtitles',
-    //     ),
-    //     Subtitle(
-    //       index: 0,
-    //       start: const Duration(seconds: 10),
-    //       end: const Duration(seconds: 20),
-    //       text: 'Whats up? :)',
-    //     ),
-    //   ];
-
-    // final subtitles = [
-    //   Subtitle(
-    //     index: 0,
-    //     start: Duration.zero,
-    //     end: const Duration(seconds: 10),
-    //     text: const TextSpan(
-    //       children: [
-    //         TextSpan(
-    //           text: 'Hello',
-    //           style: TextStyle(color: Colors.red, fontSize: 22),
-    //         ),
-    //         TextSpan(
-    //           text: ' from ',
-    //           style: TextStyle(color: Colors.green, fontSize: 20),
-    //         ),
-    //         TextSpan(
-    //           text: 'subtitles',
-    //           style: TextStyle(color: Colors.blue, fontSize: 18),
-    //         )
-    //       ],
-    //     ),
-    //   ),
-    //   Subtitle(
-    //     index: 0,
-    //     start: const Duration(seconds: 10),
-    //     end: const Duration(seconds: 20),
-    //     text: 'Whats up? :)',
-    //     // text: const TextSpan(
-    //     //   text: 'Whats up? :)',
-    //     //   style: TextStyle(color: Colors.amber, fontSize: 22, fontStyle: FontStyle.italic),
-    //     // ),
-    //   ),
-    // ];
-
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController1,
       autoPlay: true,
       looping: true,
       progressIndicatorDelay: bufferDelay != null ? Duration(milliseconds: bufferDelay!) : null,
-
       additionalOptions: (context) {
         return <OptionItem>[
           OptionItem(
@@ -130,39 +80,19 @@ class _ChewieDemoState extends State<ChewieDemo> {
           ),
         ];
       },
-      // subtitleBuilder: (context, dynamic subtitle) => Container(),
-      // subtitle: Subtitles([]),
-      // showSubtitle: true,
-      // subtitle: Subtitles([]),
-      // subtitleBuilder: (context, dynamic subtitle) => Container(
-      //   padding: const EdgeInsets.all(10.0),
-      //   child: Text(
-      //     subtitle.toString(),
-      //     style: const TextStyle(color: Colors.black),
-      //   ),
-      // ),
       showDownloadOption: true,
       showAutoPlaySwitch: true,
       onSwitchedAutoPlay: (value) {
         // print('value = $value');
       },
+      // sectionDurationRange: [
+      //   DurationRange(Duration.zero, const Duration(seconds: 20)),
+      //   DurationRange(const Duration(seconds: 20), const Duration(seconds: 50)),
+      //   DurationRange(const Duration(seconds: 50), const Duration(seconds: 163)),
+      // ],
       hideControlsTimer: const Duration(seconds: 1),
       deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
       deviceOrientationsOnEnterFullScreen: [DeviceOrientation.portraitUp, DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft],
-
-      // Try playing around with some of these other options:
-
-      // showControls: false,
-      // materialProgressColors: ChewieProgressColors(
-      //   playedColor: Colors.red,
-      //   handleColor: Colors.blue,
-      //   backgroundColor: Colors.grey,
-      //   bufferedColor: Colors.lightGreen,
-      // ),
-      // placeholder: Container(
-      //   color: Colors.grey,
-      // ),
-      // autoInitialize: true,
     );
   }
 

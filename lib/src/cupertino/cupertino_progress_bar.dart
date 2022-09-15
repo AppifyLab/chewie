@@ -32,6 +32,7 @@ class CupertinoVideoProgressBar extends StatelessWidget {
       onDragEnd: onDragEnd,
       onDragStart: onDragStart,
       onDragUpdate: onDragUpdate,
+      durationRange: const [],
     );
   }
 }

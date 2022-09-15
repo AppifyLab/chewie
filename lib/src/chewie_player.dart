@@ -265,6 +265,7 @@ class ChewieController extends ChangeNotifier {
     this.showAutoPlaySwitch = false,
     this.onInitAutoPlay = true,
     this.onSwitchedAutoPlay,
+    this.sectionDurationRange,
     this.customControls,
     this.errorBuilder,
     this.allowedScreenSleep = true,
@@ -318,6 +319,7 @@ class ChewieController extends ChangeNotifier {
     bool? onInitAutoPlay,
     // Function()? onSwitchedAutoPlay,
     ValueChanged<bool>? onSwitchedAutoPlay,
+    List<DurationRange>? sectionDurationRange,
     Widget? customControls,
     Widget Function(BuildContext, String)? errorBuilder,
     bool? allowedScreenSleep,
@@ -367,6 +369,7 @@ class ChewieController extends ChangeNotifier {
       showAutoPlaySwitch: showAutoPlaySwitch ?? this.showAutoPlaySwitch,
       onSwitchedAutoPlay: onSwitchedAutoPlay ?? this.onSwitchedAutoPlay,
       onInitAutoPlay: onInitAutoPlay ?? this.onInitAutoPlay,
+      sectionDurationRange: sectionDurationRange ?? this.sectionDurationRange,
       customControls: customControls ?? this.customControls,
       errorBuilder: errorBuilder ?? this.errorBuilder,
       allowedScreenSleep: allowedScreenSleep ?? this.allowedScreenSleep,
@@ -391,6 +394,9 @@ class ChewieController extends ChangeNotifier {
   /// If false, the options button in MaterialUI and MaterialDesktopUI
   /// won't be shown.
   final bool showOptions;
+
+  /// Section duration data
+  final List<DurationRange>? sectionDurationRange;
 
   /// Pass your translations for the options like:
   /// - PlaybackSpeed
