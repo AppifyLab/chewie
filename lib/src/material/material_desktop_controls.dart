@@ -12,7 +12,6 @@ import 'package:chewie/src/material/widgets/options_dialog.dart';
 import 'package:chewie/src/material/widgets/playback_speed_dialog.dart';
 import 'package:chewie/src/models/option_item.dart';
 import 'package:chewie/src/notifiers/index.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -722,14 +721,14 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
           _hideTimer?.cancel();
         },
         onDragUpdate: () {
-          var pos = controller.value.position.inSeconds;
-          var dur = controller.value.duration.inSeconds;
+          final pos = controller.value.position.inSeconds;
+          final dur = controller.value.duration.inSeconds;
           tempX = pos / dur;
           tempX *= MediaQuery.of(context).size.width - 80;
 
-          print('pos = $pos');
-          print('dur = $dur');
-          print('tempX = $tempX');
+          // print('pos = $pos');
+          // print('dur = $dur');
+          // print('tempX = $tempX');
           setState(() {});
         },
         onDragEnd: () {
