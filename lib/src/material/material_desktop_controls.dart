@@ -117,8 +117,6 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
               _buildTopBar(),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
-
-                // alignment: Alignment.bottomCenter,
                 children: <Widget>[
                   if (_subtitleOn)
                     Transform.translate(
@@ -136,33 +134,32 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
                       ),
                     ),
                   // on hover thumbnail preview container
-
                   _buildBottomBar(context),
                 ],
               ),
-              // if (_dragging &&
-              //     chewieController.sectionDurationRange != null &&
-              //     chewieController.sectionDurationRange!
-              //             .indexWhere((element) => _latestValue.position >= element.start && _latestValue.position <= element.end) !=
-              //         -1)
-              //   Positioned(
-              //     bottom: 65,
-              //     left: tempX,
-              //     child: Column(
-              //       children: [
-              //         Text(
-              //           'Section ${chewieController.sectionDurationRange!.indexWhere((element) => _latestValue.position >= element.start && _latestValue.position <= element.end)}',
-              //           style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500),
-              //         ),
-              //         const SizedBox(height: 5),
-              //         Text(
-              //           formatDuration(_latestValue.position),
-              //           style: const TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w500),
-              //         ),
-              //         // FlickCurrentPosition(color: KColor.grey300const),
-              //       ],
-              //     ),
-              //   ),
+              if (_dragging &&
+                  chewieController.sectionDurationRange != null &&
+                  chewieController.sectionDurationRange!
+                          .indexWhere((element) => _latestValue.position >= element.start && _latestValue.position <= element.end) !=
+                      -1)
+                Positioned(
+                  bottom: 65,
+                  left: tempX,
+                  child: Column(
+                    children: [
+                      Text(
+                        'Section ${chewieController.sectionDurationRange!.indexWhere((element) => _latestValue.position >= element.start && _latestValue.position <= element.end)}',
+                        style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        formatDuration(_latestValue.position),
+                        style: const TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w500),
+                      ),
+                      // FlickCurrentPosition(color: KColor.grey300const),
+                    ],
+                  ),
+                ),
             ],
           ),
         ),
@@ -739,11 +736,11 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
         },
         colors: chewieController.materialProgressColors ??
             ChewieProgressColors(
-              playedColor: Theme.of(context).colorScheme.secondary,
-              handleColor: Theme.of(context).colorScheme.secondary,
-              bufferedColor: Theme.of(context).backgroundColor.withOpacity(0.5),
-              backgroundColor: Theme.of(context).disabledColor.withOpacity(.5),
-            ),
+                // playedColor: Theme.of(context).colorScheme.secondary,
+                // handleColor: Theme.of(context).colorScheme.secondary,
+                // bufferedColor: Theme.of(context).backgroundColor.withOpacity(0.5),
+                // backgroundColor: Theme.of(context).disabledColor.withOpacity(.5),
+                ),
         sectionDurationRange: chewieController.sectionDurationRange,
       ),
     );
