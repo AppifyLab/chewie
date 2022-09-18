@@ -255,8 +255,8 @@ class _TestProgressBarPainter extends CustomPainter {
     }
 
     /// Moment
-    final Paint momentPaint = Paint()..color = Colors.white;
-    final Paint momentColoredPaint = Paint()..color = Colors.red.withOpacity(0.75);
+    final Paint momentPaint = Paint()..color = Colors.white.withOpacity(0.5);
+    final Paint momentColoredPaint = Paint()..color = Colors.white;
 
     for (int i = 0; i < momentsList.length; i++) {
       final double moment = Duration(seconds: (i + 1) * 10).inMilliseconds / value.duration.inMilliseconds * size.width;
