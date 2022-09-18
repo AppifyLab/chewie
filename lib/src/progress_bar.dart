@@ -261,7 +261,7 @@ class _TestProgressBarPainter extends CustomPainter {
     for (int i = 0; i < momentsList.length; i++) {
       final double moment = Duration(seconds: (i + 1) * 10).inMilliseconds / value.duration.inMilliseconds * size.width;
       canvas.drawCircle(Offset(moment, baseOffset + barHeight / 2), 5.5, momentPaint);
-      canvas.drawCircle(Offset(moment, baseOffset + barHeight / 2), 3.5, momentColoredPaint);
+      canvas.drawCircle(Offset(moment, baseOffset + barHeight / 2), 2.75, momentColoredPaint);
     }
 
     canvas.drawCircle(
