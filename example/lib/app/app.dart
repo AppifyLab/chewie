@@ -1,6 +1,8 @@
+// ignore_for_file: implementation_imports
+
 import 'package:chewie/chewie.dart';
-// ignore: implementation_imports
 import 'package:chewie/src/models/video_chapters_model.dart';
+import 'package:chewie/src/models/video_moments_model.dart';
 import 'package:chewie_example/app/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,7 +42,7 @@ class _ChewieDemoState extends State<ChewieDemo> {
     super.dispose();
   }
 
-  List<String> srcs = [
+  List<String> sources = [
     "https://vz-7671715e-3da.b-cdn.net/12518df0-0200-4b88-883b-b3042aea7fa7/playlist.m3u8",
     "https://assets.mixkit.co/videos/preview/mixkit-spinning-around-the-earth-29351-large.mp4",
     "https://assets.mixkit.co/videos/preview/mixkit-daytime-city-traffic-aerial-view-56-large.mp4",
@@ -58,10 +60,10 @@ class _ChewieDemoState extends State<ChewieDemo> {
 
   Future<void> initializePlayer() async {
     _videoPlayerController1 = VideoPlayerController.network(
-      srcs[currPlayIndex],
+      sources[currentPlayIndex],
       closedCaptionFile: loadCaptions('https://letcheck.b-cdn.net/test.srt'),
     );
-    _videoPlayerController2 = VideoPlayerController.network(srcs[currPlayIndex]);
+    _videoPlayerController2 = VideoPlayerController.network(sources[currentPlayIndex]);
     await Future.wait([_videoPlayerController1.initialize(), _videoPlayerController2.initialize()]);
     _createChewieController();
     setState(() {});
@@ -101,19 +103,29 @@ class _ChewieDemoState extends State<ChewieDemo> {
           durationRange: DurationRange(const Duration(seconds: 50), const Duration(seconds: 163)),
         ),
       ],
+      momentsList: [
+        VideoMomentsModel(
+          title: 'Moment 1',
+          timestamp: 10,
+        ),
+        VideoMomentsModel(
+          title: 'Moment 2',
+          timestamp: 20,
+        ),
+      ],
       hideControlsTimer: const Duration(seconds: 1),
       deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
       deviceOrientationsOnEnterFullScreen: [DeviceOrientation.portraitUp, DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft],
     );
   }
 
-  int currPlayIndex = 0;
+  int currentPlayIndex = 0;
 
   Future<void> toggleVideo() async {
     await _videoPlayerController1.pause();
-    currPlayIndex += 1;
-    if (currPlayIndex >= srcs.length) {
-      currPlayIndex = 0;
+    currentPlayIndex += 1;
+    if (currentPlayIndex >= sources.length) {
+      currentPlayIndex = 0;
     }
     await initializePlayer();
   }

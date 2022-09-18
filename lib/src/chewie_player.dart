@@ -5,6 +5,7 @@ import 'package:chewie/src/models/option_item.dart';
 import 'package:chewie/src/models/options_translation.dart';
 import 'package:chewie/src/models/subtitle_model.dart';
 import 'package:chewie/src/models/video_chapters_model.dart';
+import 'package:chewie/src/models/video_moments_model.dart';
 import 'package:chewie/src/notifiers/player_notifier.dart';
 import 'package:chewie/src/player_with_controls.dart';
 import 'package:flutter/material.dart';
@@ -267,6 +268,7 @@ class ChewieController extends ChangeNotifier {
     this.onInitAutoPlay = true,
     this.onSwitchedAutoPlay,
     this.sectionDurationRange,
+    this.momentsList,
     this.customControls,
     this.errorBuilder,
     this.allowedScreenSleep = true,
@@ -321,6 +323,7 @@ class ChewieController extends ChangeNotifier {
     // Function()? onSwitchedAutoPlay,
     ValueChanged<bool>? onSwitchedAutoPlay,
     List<VideoChaptersModel>? sectionDurationRange,
+    List<VideoMomentsModel>? momentsList,
     Widget? customControls,
     Widget Function(BuildContext, String)? errorBuilder,
     bool? allowedScreenSleep,
@@ -371,6 +374,7 @@ class ChewieController extends ChangeNotifier {
       onSwitchedAutoPlay: onSwitchedAutoPlay ?? this.onSwitchedAutoPlay,
       onInitAutoPlay: onInitAutoPlay ?? this.onInitAutoPlay,
       sectionDurationRange: sectionDurationRange ?? this.sectionDurationRange,
+      momentsList: momentsList ?? this.momentsList,
       customControls: customControls ?? this.customControls,
       errorBuilder: errorBuilder ?? this.errorBuilder,
       allowedScreenSleep: allowedScreenSleep ?? this.allowedScreenSleep,
@@ -399,6 +403,9 @@ class ChewieController extends ChangeNotifier {
   /// Section duration data
   final List<VideoChaptersModel>? sectionDurationRange;
 
+  /// Moments list data
+  final List<VideoMomentsModel>? momentsList;
+
   /// Pass your translations for the options like:
   /// - PlaybackSpeed
   /// - Subtitles
@@ -409,7 +416,7 @@ class ChewieController extends ChangeNotifier {
   /// These are required for the default `OptionItem`'s
   final OptionsTranslation? optionsTranslation;
 
-  /// Build your own options with default chewieOptions shiped through
+  /// Build your own options with default chewieOptions shipped through
   /// the builder method. Just add your own options to the Widget
   /// you'll build. If you want to hide the chewieOptions, just leave them
   /// out from your Widget.
@@ -430,7 +437,7 @@ class ChewieController extends ChangeNotifier {
   /// Whether to show subtitles toggle control icon button
   final bool showSubtitle;
 
-  /// Whether to show donwload icon button
+  /// Whether to show download icon button
   final bool showDownloadOption;
 
   /// Add some custom action on tapping download button
@@ -439,7 +446,7 @@ class ChewieController extends ChangeNotifier {
   /// Whether to show auto play switch button
   final bool showAutoPlaySwitch;
 
-  /// Show initially list autplay set true/false
+  /// Show initially list auto-play set true/false
   final bool onInitAutoPlay;
 
   /// Add some custom action on switching play-pause option
@@ -475,7 +482,7 @@ class ChewieController extends ChangeNotifier {
   /// Max scale when zooming
   final double maxScale;
 
-  /// Defines customised controls. Check [MaterialControls] or
+  /// Defines customized controls. Check [MaterialControls] or
   /// [CupertinoControls] for reference.
   final Widget? customControls;
 
@@ -504,16 +511,16 @@ class ChewieController extends ChangeNotifier {
   /// A widget which is placed between the video and the controls
   final Widget? overlay;
 
-  /// Defines if the player will start in fullscreen when play is pressed
+  /// Defines if the player will start in full-screen when play is pressed
   final bool fullScreenByDefault;
 
-  /// Defines if the player will sleep in fullscreen or not
+  /// Defines if the player will sleep in full-screen or not
   final bool allowedScreenSleep;
 
   /// Defines if the controls should be shown for live stream video
   final bool isLive;
 
-  /// Defines if the fullscreen control should be shown
+  /// Defines if the full-screen control should be shown
   final bool allowFullScreen;
 
   /// Defines if the mute control should be shown
@@ -522,7 +529,7 @@ class ChewieController extends ChangeNotifier {
   /// Defines if the playback speed control should be shown
   final bool allowPlaybackSpeedChanging;
 
-  /// Defines if push/pop navigations use the rootNavigator
+  /// Defines if push/pop navigation's use the rootNavigator
   final bool useRootNavigator;
 
   /// Defines the [Duration] before the video controls are hidden. By default, this is set to three seconds.
@@ -531,19 +538,19 @@ class ChewieController extends ChangeNotifier {
   /// Defines the set of allowed playback speeds user can change
   final List<double> playbackSpeeds;
 
-  /// Defines the system overlays visible on entering fullscreen
+  /// Defines the system overlays visible on entering full-screen
   final List<SystemUiOverlay>? systemOverlaysOnEnterFullScreen;
 
-  /// Defines the set of allowed device orientations on entering fullscreen
+  /// Defines the set of allowed device orientations on entering full-screen
   final List<DeviceOrientation>? deviceOrientationsOnEnterFullScreen;
 
-  /// Defines the system overlays visible after exiting fullscreen
+  /// Defines the system overlays visible after exiting full-screen
   final List<SystemUiOverlay> systemOverlaysAfterFullScreen;
 
-  /// Defines the set of allowed device orientations after exiting fullscreen
+  /// Defines the set of allowed device orientations after exiting full-screen
   final List<DeviceOrientation> deviceOrientationsAfterFullScreen;
 
-  /// Defines a custom RoutePageBuilder for the fullscreen
+  /// Defines a custom RoutePageBuilder for the full-screen
   final ChewieRoutePageBuilder? routePageBuilder;
 
   /// Defines a delay in milliseconds between entering buffering state and displaying the loading spinner. Set null (default) to disable it.

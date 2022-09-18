@@ -142,6 +142,9 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
                   chewieController.sectionDurationRange!.indexWhere(
                         (element) => _latestValue.position >= element.durationRange.start && _latestValue.position <= element.durationRange.end,
                       ) !=
+                      -1 &&
+                  chewieController.momentsList!
+                          .indexWhere((element) => Duration(seconds: element.timestamp).inSeconds == _latestValue.position.inSeconds) ==
                       -1)
                 Positioned(
                   bottom: 65,
@@ -162,7 +165,35 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
                         formatDuration(_latestValue.position),
                         style: const TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w500),
                       ),
-                      // FlickCurrentPosition(color: KColor.grey300const),
+                    ],
+                  ),
+                ),
+              if (_dragging &&
+                  chewieController.momentsList!
+                          .indexWhere((element) => Duration(seconds: element.timestamp).inSeconds == _latestValue.position.inSeconds) !=
+                      -1)
+                Positioned(
+                  bottom: 65,
+                  left: tempX,
+                  child: Column(
+                    children: [
+                      Text(
+                        chewieController.momentsList!
+                            .where((element) => Duration(seconds: element.timestamp).inSeconds == _latestValue.position.inSeconds)
+                            .first
+                            .title,
+                        //     .where(
+                        //       (element) => _latestValue.position >= element.durationRange.start && _latestValue.position <= element.durationRange.end,
+                        //     )
+                        //     .first
+                        //     .title,
+                        style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        formatDuration(_latestValue.position),
+                        style: const TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w500),
+                      ),
                     ],
                   ),
                 ),
@@ -740,14 +771,9 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
 
           _startHideTimer();
         },
-        colors: chewieController.materialProgressColors ??
-            ChewieProgressColors(
-                // playedColor: Theme.of(context).colorScheme.secondary,
-                // handleColor: Theme.of(context).colorScheme.secondary,
-                // bufferedColor: Theme.of(context).backgroundColor.withOpacity(0.5),
-                // backgroundColor: Theme.of(context).disabledColor.withOpacity(.5),
-                ),
+        colors: chewieController.materialProgressColors ?? ChewieProgressColors(),
         sectionDurationRange: chewieController.sectionDurationRange,
+        momentsList: chewieController.momentsList,
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:chewie/src/chewie_progress_colors.dart';
 import 'package:chewie/src/models/video_chapters_model.dart';
+import 'package:chewie/src/models/video_moments_model.dart';
 import 'package:chewie/src/progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -13,6 +14,7 @@ class MaterialVideoProgressBar extends StatelessWidget {
     this.onDragStart,
     this.onDragUpdate,
     this.sectionDurationRange,
+    this.momentsList,
     Key? key,
   })  : colors = colors ?? ChewieProgressColors(),
         super(key: key);
@@ -24,6 +26,7 @@ class MaterialVideoProgressBar extends StatelessWidget {
   final Function()? onDragEnd;
   final Function()? onDragUpdate;
   final List<VideoChaptersModel>? sectionDurationRange;
+  final List<VideoMomentsModel>? momentsList;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +40,7 @@ class MaterialVideoProgressBar extends StatelessWidget {
       onDragStart: onDragStart,
       onDragUpdate: onDragUpdate,
       durationRange: sectionDurationRange ?? [],
+      momentsList: momentsList ?? [],
     );
   }
 }
