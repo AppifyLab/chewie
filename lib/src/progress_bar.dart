@@ -1,4 +1,5 @@
 import 'package:chewie/src/chewie_progress_colors.dart';
+import 'package:chewie/src/models/video_chapters_model.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -27,7 +28,7 @@ class VideoProgressBar extends StatefulWidget {
   final double handleHeight;
   final bool drawShadow;
 
-  final List<DurationRange> durationRange;
+  final List<VideoChaptersModel> durationRange;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -145,7 +146,7 @@ class _TestProgressBarPainter extends CustomPainter {
   final double barHeight;
   final double handleHeight;
   final bool drawShadow;
-  final List<DurationRange> durationRange;
+  final List<VideoChaptersModel> durationRange;
 
   @override
   bool shouldRepaint(CustomPainter painter) {
@@ -202,7 +203,7 @@ class _TestProgressBarPainter extends CustomPainter {
       );
     } else {
       for (int j = 0; j < durationRange.length; j++) {
-        final DurationRange range = durationRange[j];
+        final DurationRange range = durationRange[j].durationRange;
         final double start = range.startFraction(value.duration) * size.width;
         final double end = range.endFraction(value.duration) * size.width;
 
@@ -234,7 +235,7 @@ class _TestProgressBarPainter extends CustomPainter {
 
     /// General progress bar
     for (int i = 0; i < durationRange.length; i++) {
-      final DurationRange range = durationRange[i];
+      final DurationRange range = durationRange[i].durationRange;
       final double start = range.startFraction(value.duration) * size.width;
       final double end = range.endFraction(value.duration) * size.width;
 

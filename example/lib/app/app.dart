@@ -1,4 +1,6 @@
 import 'package:chewie/chewie.dart';
+// ignore: implementation_imports
+import 'package:chewie/src/models/video_chapters_model.dart';
 import 'package:chewie_example/app/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -86,9 +88,18 @@ class _ChewieDemoState extends State<ChewieDemo> {
         // print('value = $value');
       },
       sectionDurationRange: [
-        DurationRange(Duration.zero, const Duration(seconds: 20)),
-        DurationRange(const Duration(seconds: 20), const Duration(seconds: 50)),
-        DurationRange(const Duration(seconds: 50), const Duration(seconds: 163)),
+        VideoChaptersModel(
+          title: 'Chapter 1',
+          durationRange: DurationRange(Duration.zero, const Duration(seconds: 20)),
+        ),
+        VideoChaptersModel(
+          title: 'Chapter 2',
+          durationRange: DurationRange(const Duration(seconds: 20), const Duration(seconds: 50)),
+        ),
+        VideoChaptersModel(
+          title: 'Chapter 3',
+          durationRange: DurationRange(const Duration(seconds: 50), const Duration(seconds: 163)),
+        ),
       ],
       hideControlsTimer: const Duration(seconds: 1),
       deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],

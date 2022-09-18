@@ -139,8 +139,9 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
               ),
               if (_dragging &&
                   chewieController.sectionDurationRange != null &&
-                  chewieController.sectionDurationRange!
-                          .indexWhere((element) => _latestValue.position >= element.start && _latestValue.position <= element.end) !=
+                  chewieController.sectionDurationRange!.indexWhere(
+                        (element) => _latestValue.position >= element.durationRange.start && _latestValue.position <= element.durationRange.end,
+                      ) !=
                       -1)
                 Positioned(
                   bottom: 65,
@@ -148,7 +149,12 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
                   child: Column(
                     children: [
                       Text(
-                        'Section ${chewieController.sectionDurationRange!.indexWhere((element) => _latestValue.position >= element.start && _latestValue.position <= element.end)}',
+                        chewieController.sectionDurationRange!
+                            .where(
+                              (element) => _latestValue.position >= element.durationRange.start && _latestValue.position <= element.durationRange.end,
+                            )
+                            .first
+                            .title,
                         style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500),
                       ),
                       const SizedBox(height: 5),

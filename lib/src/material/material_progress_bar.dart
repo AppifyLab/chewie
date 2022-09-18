@@ -1,4 +1,5 @@
 import 'package:chewie/src/chewie_progress_colors.dart';
+import 'package:chewie/src/models/video_chapters_model.dart';
 import 'package:chewie/src/progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -22,7 +23,7 @@ class MaterialVideoProgressBar extends StatelessWidget {
   final Function()? onDragStart;
   final Function()? onDragEnd;
   final Function()? onDragUpdate;
-  final List<DurationRange>? sectionDurationRange;
+  final List<VideoChaptersModel>? sectionDurationRange;
 
   @override
   Widget build(BuildContext context) {

@@ -4,6 +4,7 @@ import 'package:chewie/src/chewie_progress_colors.dart';
 import 'package:chewie/src/models/option_item.dart';
 import 'package:chewie/src/models/options_translation.dart';
 import 'package:chewie/src/models/subtitle_model.dart';
+import 'package:chewie/src/models/video_chapters_model.dart';
 import 'package:chewie/src/notifiers/player_notifier.dart';
 import 'package:chewie/src/player_with_controls.dart';
 import 'package:flutter/material.dart';
@@ -319,7 +320,7 @@ class ChewieController extends ChangeNotifier {
     bool? onInitAutoPlay,
     // Function()? onSwitchedAutoPlay,
     ValueChanged<bool>? onSwitchedAutoPlay,
-    List<DurationRange>? sectionDurationRange,
+    List<VideoChaptersModel>? sectionDurationRange,
     Widget? customControls,
     Widget Function(BuildContext, String)? errorBuilder,
     bool? allowedScreenSleep,
@@ -396,7 +397,7 @@ class ChewieController extends ChangeNotifier {
   final bool showOptions;
 
   /// Section duration data
-  final List<DurationRange>? sectionDurationRange;
+  final List<VideoChaptersModel>? sectionDurationRange;
 
   /// Pass your translations for the options like:
   /// - PlaybackSpeed
