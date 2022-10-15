@@ -261,6 +261,7 @@ class ChewieController extends ChangeNotifier {
     this.maxScale = 2.5,
     // this.subtitle,
     // this.subtitleBuilder,
+    this.subtitlesDisabled = true,
     this.showSubtitle = true,
     this.showDownloadOption = false,
     this.onTapDownload,
@@ -315,6 +316,7 @@ class ChewieController extends ChangeNotifier {
     double? maxScale,
     Subtitles? subtitle,
     Widget Function(BuildContext, dynamic)? subtitleBuilder,
+    bool? subtitlesDisabled,
     bool? showSubtitle,
     bool? showDownloadOption,
     Function()? onTapDownload,
@@ -367,6 +369,7 @@ class ChewieController extends ChangeNotifier {
       showControls: showControls ?? this.showControls,
       // subtitle: subtitle ?? this.subtitle,
       // subtitleBuilder: subtitleBuilder ?? this.subtitleBuilder,
+      subtitlesDisabled: subtitlesDisabled ?? this.subtitlesDisabled,
       showSubtitle: showSubtitle ?? this.showSubtitle,
       showDownloadOption: showDownloadOption ?? this.showDownloadOption,
       onTapDownload: onTapDownload ?? this.onTapDownload,
@@ -433,6 +436,9 @@ class ChewieController extends ChangeNotifier {
 
   // /// Add a List of Subtitles here in `Subtitles.subtitle`
   // Subtitles? subtitle;
+
+  /// Whether to show subtitles control icon button as disabled
+  final bool subtitlesDisabled;
 
   /// Whether to show subtitles toggle control icon button
   final bool showSubtitle;

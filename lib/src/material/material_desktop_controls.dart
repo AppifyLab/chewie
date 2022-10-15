@@ -237,9 +237,9 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
       visualDensity: VisualDensity.compact,
       icon: Icon(
         _subtitleOn ? Icons.subtitles : Icons.subtitles_off,
-        color: _chewieController!.videoPlayerController.closedCaptionFile == null ? Colors.white38 : Colors.white,
+        color: _chewieController!.subtitlesDisabled ? Colors.white38 : Colors.white,
       ),
-      onPressed: _onSubtitleTap,
+      onPressed: _chewieController!.subtitlesDisabled ? null : _onSubtitleTap,
     );
   }
 
