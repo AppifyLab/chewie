@@ -61,7 +61,7 @@ class _ChewieDemoState extends State<ChewieDemo> {
   Future<void> initializePlayer() async {
     _videoPlayerController1 = VideoPlayerController.network(
       sources[currentPlayIndex],
-      closedCaptionFile: loadCaptions('https://letcheck.b-cdn.net/test.srt'),
+      // closedCaptionFile: loadCaptions('https://letcheck.b-cdn.net/test.srt'),
     );
     _videoPlayerController2 = VideoPlayerController.network(sources[currentPlayIndex]);
     await Future.wait([_videoPlayerController1.initialize(), _videoPlayerController2.initialize()]);

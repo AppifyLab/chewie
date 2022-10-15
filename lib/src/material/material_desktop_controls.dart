@@ -235,7 +235,10 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
     return IconButton(
       padding: isPadded ? const EdgeInsets.all(8.0) : EdgeInsets.zero,
       visualDensity: VisualDensity.compact,
-      icon: Icon(_subtitleOn ? Icons.subtitles : Icons.subtitles_off, color: Colors.white),
+      icon: Icon(
+        _subtitleOn ? Icons.subtitles : Icons.subtitles_off,
+        color: _chewieController!.videoPlayerController.closedCaptionFile == null ? Colors.white38 : Colors.white,
+      ),
       onPressed: _onSubtitleTap,
     );
   }
