@@ -338,7 +338,10 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
           child: Row(
             children: [
               if (chewieController.showAutoPlaySwitch) _buildAutoPlaySwitchButton(),
-              if (chewieController.showDownloadOption) _buildDownloadButton(),
+              if (chewieController.showDownloadOption)
+                _buildDownloadButton()
+              else
+                const Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25))
             ],
           ),
         ),
