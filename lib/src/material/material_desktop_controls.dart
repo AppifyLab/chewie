@@ -349,7 +349,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
 
   Widget _buildAutoPlaySwitchButton() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
+      padding: const EdgeInsets.only(bottom: 4, top: 4),
       child: AdvancedSwitch(
         controller: _autoPlaySwitchController,
         activeColor: Colors.white.withOpacity(0.2),
@@ -380,7 +380,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
         height: barHeight,
         color: Colors.transparent,
         margin: const EdgeInsets.only(left: 8.0, right: 4.0),
-        padding: const EdgeInsets.only(left: 10, right: 10),
+        padding: EdgeInsets.only(left: 10, right: chewieController.popupMenuButton == null ? 10 : 0),
         child: const Icon(CupertinoIcons.cloud_download, color: Colors.white),
       ),
     );

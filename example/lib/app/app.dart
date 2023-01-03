@@ -84,8 +84,13 @@ class _ChewieDemoState extends State<ChewieDemo> {
           ),
         ];
       },
-      showDownloadOption: true,
+      // showDownloadOption: true,
       showAutoPlaySwitch: true,
+      popupMenuButton: PopupMenuButton(
+        icon: const Icon(Icons.more_vert, color: Colors.white),
+        itemBuilder: (context) => [const PopupMenuItem<String>(child: Text('test'))],
+        padding: EdgeInsets.zero,
+      ),
       onSwitchedAutoPlay: (value) {
         // print('value = $value');
       },
