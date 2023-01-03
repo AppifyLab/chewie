@@ -268,6 +268,7 @@ class ChewieController extends ChangeNotifier {
     this.showAutoPlaySwitch = false,
     this.onInitAutoPlay = true,
     this.onSwitchedAutoPlay,
+    this.popupMenuButton,
     this.sectionDurationRange,
     this.momentsList,
     this.customControls,
@@ -321,6 +322,7 @@ class ChewieController extends ChangeNotifier {
     bool? showDownloadOption,
     Function()? onTapDownload,
     bool? showAutoPlaySwitch,
+    Widget? popupMenuButton,
     bool? onInitAutoPlay,
     // Function()? onSwitchedAutoPlay,
     ValueChanged<bool>? onSwitchedAutoPlay,
@@ -375,6 +377,7 @@ class ChewieController extends ChangeNotifier {
       onTapDownload: onTapDownload ?? this.onTapDownload,
       showAutoPlaySwitch: showAutoPlaySwitch ?? this.showAutoPlaySwitch,
       onSwitchedAutoPlay: onSwitchedAutoPlay ?? this.onSwitchedAutoPlay,
+      popupMenuButton: popupMenuButton ?? this.popupMenuButton,
       onInitAutoPlay: onInitAutoPlay ?? this.onInitAutoPlay,
       sectionDurationRange: sectionDurationRange ?? this.sectionDurationRange,
       momentsList: momentsList ?? this.momentsList,
@@ -448,6 +451,9 @@ class ChewieController extends ChangeNotifier {
 
   /// Add some custom action on tapping download button
   Function()? onTapDownload;
+
+  /// To add popup menu button - for more video options
+  final Widget? popupMenuButton;
 
   /// Whether to show auto play switch button
   final bool showAutoPlaySwitch;

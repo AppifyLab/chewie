@@ -286,10 +286,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
             _startHideTimer();
           }
         },
-        icon: Icon(
-          icon ?? Icons.more_vert,
-          color: Colors.white,
-        ),
+        icon: Icon(icon ?? Icons.more_vert, color: Colors.white),
       ),
     );
   }
@@ -341,7 +338,8 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
               if (chewieController.showDownloadOption)
                 _buildDownloadButton()
               else
-                const Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25))
+                const Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25)),
+              if (chewieController.popupMenuButton != null) chewieController.popupMenuButton!,
             ],
           ),
         ),
