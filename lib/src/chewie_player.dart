@@ -253,6 +253,7 @@ class ChewieController extends ChangeNotifier {
     this.overlay,
     this.showControlsOnInitialize = true,
     this.showOptions = true,
+    this.showAirPlay =false,
     this.optionsBuilder,
     this.additionalOptions,
     this.showControls = true,
@@ -309,6 +310,7 @@ class ChewieController extends ChangeNotifier {
     Widget? overlay,
     bool? showControlsOnInitialize,
     bool? showOptions,
+    bool? showAirPlay,
     Future<void> Function(BuildContext, List<OptionItem>)? optionsBuilder,
     List<OptionItem> Function(BuildContext)? additionalOptions,
     bool? showControls,
@@ -366,6 +368,7 @@ class ChewieController extends ChangeNotifier {
       overlay: overlay ?? this.overlay,
       showControlsOnInitialize: showControlsOnInitialize ?? this.showControlsOnInitialize,
       showOptions: showOptions ?? this.showOptions,
+      showAirPlay : showAirPlay ?? this.showAirPlay,
       optionsBuilder: optionsBuilder ?? this.optionsBuilder,
       additionalOptions: additionalOptions ?? this.additionalOptions,
       showControls: showControls ?? this.showControls,
@@ -405,6 +408,7 @@ class ChewieController extends ChangeNotifier {
   /// If false, the options button in MaterialUI and MaterialDesktopUI
   /// won't be shown.
   final bool showOptions;
+  final bool showAirPlay;
 
   /// Section duration data
   final List<VideoChaptersModel>? sectionDurationRange;

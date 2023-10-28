@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:chewie/src/animated_play_pause.dart';
@@ -14,11 +15,13 @@ import 'package:chewie/src/models/option_item.dart';
 import 'package:chewie/src/notifiers/index.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_to_airplay/flutter_to_airplay.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 class MaterialDesktopControls extends StatefulWidget {
-  const MaterialDesktopControls({this.showPlayButton = true, Key? key}) : super(key: key);
+  const MaterialDesktopControls({this.showPlayButton = true, Key? key})
+      : super(key: key);
 
   final bool showPlayButton;
 
@@ -28,7 +31,8 @@ class MaterialDesktopControls extends StatefulWidget {
   }
 }
 
-class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with SingleTickerProviderStateMixin {
+class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
+    with SingleTickerProviderStateMixin {
   final _autoPlaySwitchController = ValueNotifier<bool>(false);
   late PlayerNotifier notifier;
   late VideoPlayerValue _latestValue;
@@ -82,11 +86,15 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
     /// and position is equal to buffered duration.
 
     /// TODO :: Also check if paused/playing
-    _isBuffering = _chewieController!.videoPlayerController.value.position != _chewieController!.videoPlayerController.value.duration &&
+    _isBuffering = _chewieController!.videoPlayerController.value.position !=
+            _chewieController!.videoPlayerController.value.duration &&
         !_chewieController!.videoPlayerController.value.hasError &&
         _chewieController!.videoPlayerController.value.isPlaying &&
-        _chewieController!.videoPlayerController.value.buffered.isNotEmpty == true &&
-        _chewieController!.videoPlayerController.value.position.inSeconds >= _chewieController!.videoPlayerController.value.buffered[0].end.inSeconds;
+        _chewieController!.videoPlayerController.value.buffered.isNotEmpty ==
+            true &&
+        _chewieController!.videoPlayerController.value.position.inSeconds >=
+            _chewieController!
+                .videoPlayerController.value.buffered[0].end.inSeconds;
 
     if (_latestValue.hasError) {
       return chewieController.errorBuilder?.call(
@@ -112,7 +120,10 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
           absorbing: notifier.hideStuff,
           child: Stack(
             children: [
-              if (_isBuffering) const Center(child: CircularProgressIndicator()) else _buildHitArea(),
+              if (_isBuffering)
+                const Center(child: CircularProgressIndicator())
+              else
+                _buildHitArea(),
               // if (_displayBufferingIndicator) const Center(child: CircularProgressIndicator()) else _buildHitArea(),
               _buildTopBar(),
               Column(
@@ -129,8 +140,10 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
                                 : barHeight * 0.8,
                       ),
                       child: ClosedCaption(
-                        text: _chewieController?.videoPlayerController.value.caption.text,
-                        textStyle: const TextStyle(fontSize: 14, color: Colors.white),
+                        text: _chewieController
+                            ?.videoPlayerController.value.caption.text,
+                        textStyle:
+                            const TextStyle(fontSize: 14, color: Colors.white),
                       ),
                     ),
                   // on hover thumbnail preview container
@@ -140,11 +153,17 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
               if (_dragging &&
                   chewieController.sectionDurationRange != null &&
                   chewieController.sectionDurationRange!.indexWhere(
-                        (element) => _latestValue.position >= element.durationRange.start && _latestValue.position <= element.durationRange.end,
+                        (element) =>
+                            _latestValue.position >=
+                                element.durationRange.start &&
+                            _latestValue.position <= element.durationRange.end,
                       ) !=
                       -1 &&
-                  chewieController.momentsList!
-                          .indexWhere((element) => Duration(seconds: element.timestamp).inSeconds == _latestValue.position.inSeconds) ==
+                  chewieController.momentsList!.indexWhere(
+                        (element) =>
+                            Duration(seconds: element.timestamp).inSeconds ==
+                            _latestValue.position.inSeconds,
+                      ) ==
                       -1)
                 Positioned(
                   bottom: 65,
@@ -154,23 +173,38 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
                       Text(
                         chewieController.sectionDurationRange!
                             .where(
-                              (element) => _latestValue.position >= element.durationRange.start && _latestValue.position <= element.durationRange.end,
+                              (element) =>
+                                  _latestValue.position >=
+                                      element.durationRange.start &&
+                                  _latestValue.position <=
+                                      element.durationRange.end,
                             )
                             .first
                             .title,
-                        style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                       const SizedBox(height: 5),
                       Text(
                         formatDuration(_latestValue.position),
-                        style: const TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w500),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ],
                   ),
                 ),
               if (_dragging &&
-                  chewieController.momentsList!
-                          .indexWhere((element) => Duration(seconds: element.timestamp).inSeconds == _latestValue.position.inSeconds) !=
+                  chewieController.momentsList!.indexWhere(
+                        (element) =>
+                            Duration(seconds: element.timestamp).inSeconds ==
+                            _latestValue.position.inSeconds,
+                      ) !=
                       -1)
                 Positioned(
                   bottom: 65,
@@ -179,7 +213,12 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
                     children: [
                       Text(
                         chewieController.momentsList!
-                            .where((element) => Duration(seconds: element.timestamp).inSeconds == _latestValue.position.inSeconds)
+                            .where(
+                              (element) =>
+                                  Duration(seconds: element.timestamp)
+                                      .inSeconds ==
+                                  _latestValue.position.inSeconds,
+                            )
                             .first
                             .title,
                         //     .where(
@@ -187,12 +226,20 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
                         //     )
                         //     .first
                         //     .title,
-                        style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                       const SizedBox(height: 5),
                       Text(
                         formatDuration(_latestValue.position),
-                        style: const TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w500),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ],
                   ),
@@ -237,7 +284,9 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
       visualDensity: VisualDensity.compact,
       icon: Icon(
         _subtitleOn ? Icons.subtitles : Icons.subtitles_off,
-        color: _chewieController!.subtitlesDisabled ? Colors.white38 : Colors.white,
+        color: _chewieController!.subtitlesDisabled
+            ? Colors.white38
+            : Colors.white,
       ),
       onPressed: _chewieController!.subtitlesDisabled ? null : _onSubtitleTap,
     );
@@ -251,11 +300,13 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
           _onSpeedButtonTap();
         },
         iconData: Icons.speed,
-        title: chewieController.optionsTranslation?.playbackSpeedButtonText ?? 'Playback speed',
+        title: chewieController.optionsTranslation?.playbackSpeedButtonText ??
+            'Playback speed',
       )
     ];
 
-    if (chewieController.additionalOptions != null && chewieController.additionalOptions!(context).isNotEmpty) {
+    if (chewieController.additionalOptions != null &&
+        chewieController.additionalOptions!(context).isNotEmpty) {
       options.addAll(chewieController.additionalOptions!(context));
     }
 
@@ -277,7 +328,8 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
               useRootNavigator: chewieController.useRootNavigator,
               builder: (context) => OptionsDialog(
                 options: options,
-                cancelButtonText: chewieController.optionsTranslation?.cancelButtonText,
+                cancelButtonText:
+                    chewieController.optionsTranslation?.cancelButtonText,
               ),
             );
           }
@@ -334,12 +386,24 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
           duration: const Duration(milliseconds: 250),
           child: Row(
             children: [
-              if (chewieController.showAutoPlaySwitch) _buildAutoPlaySwitchButton(),
+              if (chewieController.showAutoPlaySwitch)
+                _buildAutoPlaySwitchButton(),
+              if (Platform.isIOS) ...[
+                if (chewieController.showAirPlay)
+                  const SizedBox(
+                    width: 44.0,
+                    height: 44.0,
+                    child: AirPlayIconButton(),
+                  ),
+              ],
               if (chewieController.showDownloadOption)
                 _buildDownloadButton()
               else
-                const Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25)),
-              if (chewieController.popupMenuButton != null) chewieController.popupMenuButton!,
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
+                ),
+              if (chewieController.popupMenuButton != null)
+                chewieController.popupMenuButton!,
             ],
           ),
         ),
@@ -380,21 +444,25 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
         height: barHeight,
         color: Colors.transparent,
         margin: const EdgeInsets.only(left: 8.0, right: 4.0),
-        padding: EdgeInsets.only(left: 10, right: chewieController.popupMenuButton == null ? 10 : 0),
+        padding: EdgeInsets.only(
+          left: 10,
+          right: chewieController.popupMenuButton == null ? 10 : 0,
+        ),
         child: const Icon(CupertinoIcons.cloud_download, color: Colors.white),
       ),
     );
   }
 
   AnimatedOpacity _buildBottomBar(BuildContext context) {
-    final iconColor = Theme.of(context).textTheme.button!.color;
+    final iconColor = Theme.of(context).textTheme.labelLarge!.color;
 
     return AnimatedOpacity(
       opacity: notifier.hideStuff ? 0.0 : 1.0,
       duration: const Duration(milliseconds: 300),
       child: Container(
         height: barHeight + (chewieController.isFullScreen ? 20.0 : 0),
-        padding: EdgeInsets.only(bottom: chewieController.isFullScreen ? 10.0 : 15),
+        padding:
+            EdgeInsets.only(bottom: chewieController.isFullScreen ? 10.0 : 15),
         child: SafeArea(
           bottom: chewieController.isFullScreen,
           child: Column(
@@ -407,10 +475,16 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
                   children: <Widget>[
                     _buildPlayPause(controller),
                     _buildMuteButton(controller),
-                    if (chewieController.isLive) const Expanded(child: Text('LIVE')) else _buildPosition(iconColor),
+                    if (chewieController.isLive)
+                      const Expanded(child: Text('LIVE'))
+                    else
+                      _buildPosition(iconColor),
                     const Spacer(),
-                    if (chewieController.showControls && chewieController.showSubtitle) _buildSubtitleToggle(),
-                    if (chewieController.showOptions) _buildOptionsButton(icon: Icons.settings),
+                    if (chewieController.showControls &&
+                        chewieController.showSubtitle)
+                      _buildSubtitleToggle(),
+                    if (chewieController.showOptions)
+                      _buildOptionsButton(icon: Icons.settings),
                     if (chewieController.allowFullScreen) _buildExpandButton(),
                   ],
                 ),
@@ -449,7 +523,9 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
           padding: const EdgeInsets.only(left: 4, right: 6),
           child: Center(
             child: Icon(
-              chewieController.isFullScreen ? Icons.fullscreen_exit : Icons.fullscreen,
+              chewieController.isFullScreen
+                  ? Icons.fullscreen_exit
+                  : Icons.fullscreen,
               color: Colors.white,
             ),
           ),
@@ -460,11 +536,14 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
 
   Widget _buildHitArea() {
     final bool isFinished = _latestValue.position >= _latestValue.duration;
-    final bool showPlayButton = widget.showPlayButton && !_dragging && !notifier.hideStuff;
+    final bool showPlayButton =
+        widget.showPlayButton && !_dragging && !notifier.hideStuff;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      color: notifier.hideStuff ? Colors.transparent : Colors.black.withOpacity(0.5),
+      color: notifier.hideStuff
+          ? Colors.transparent
+          : Colors.black.withOpacity(0.5),
       child: Row(
         children: [
           const Spacer(),
@@ -584,7 +663,9 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
           padding: const EdgeInsets.only(left: 6.0, right: 8.0),
           margin: const EdgeInsets.only(right: 8.0),
           child: Icon(
-            isForward ? CupertinoIcons.goforward_10 : CupertinoIcons.gobackward_10,
+            isForward
+                ? CupertinoIcons.goforward_10
+                : CupertinoIcons.gobackward_10,
             color: Colors.white,
             size: chewieController.isFullScreen ? 30 : 24,
           ),
@@ -598,11 +679,13 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
 
     if (isForward) {
       final end = _latestValue.duration.inMilliseconds;
-      final skip = (_latestValue.position + const Duration(seconds: 10)).inMilliseconds;
+      final skip =
+          (_latestValue.position + const Duration(seconds: 10)).inMilliseconds;
       controller.seekTo(Duration(milliseconds: math.min(skip, end)));
     } else {
       final beginning = Duration.zero.inMilliseconds;
-      final skip = (_latestValue.position - const Duration(seconds: 15)).inMilliseconds;
+      final skip =
+          (_latestValue.position - const Duration(seconds: 15)).inMilliseconds;
       controller.seekTo(Duration(milliseconds: math.max(skip, beginning)));
     }
   }
@@ -671,7 +754,8 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
       notifier.hideStuff = true;
 
       chewieController.toggleFullScreen();
-      _showAfterExpandCollapseTimer = Timer(const Duration(milliseconds: 300), () {
+      _showAfterExpandCollapseTimer =
+          Timer(const Duration(milliseconds: 300), () {
         setState(() {
           _cancelAndRestartTimer();
         });
@@ -705,8 +789,9 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
   }
 
   void _startHideTimer() {
-    final hideControlsTimer =
-        chewieController.hideControlsTimer.isNegative ? ChewieController.defaultHideControlsTimer : chewieController.hideControlsTimer;
+    final hideControlsTimer = chewieController.hideControlsTimer.isNegative
+        ? ChewieController.defaultHideControlsTimer
+        : chewieController.hideControlsTimer;
     _hideTimer = Timer(hideControlsTimer, () {
       setState(() {
         notifier.hideStuff = true;
@@ -775,7 +860,8 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls> with 
 
           _startHideTimer();
         },
-        colors: chewieController.materialProgressColors ?? ChewieProgressColors(),
+        colors:
+            chewieController.materialProgressColors ?? ChewieProgressColors(),
         sectionDurationRange: chewieController.sectionDurationRange,
         momentsList: chewieController.momentsList,
       ),

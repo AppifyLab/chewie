@@ -59,22 +59,29 @@ class _ChewieDemoState extends State<ChewieDemo> {
   }
 
   Future<void> initializePlayer() async {
-    _videoPlayerController1 = VideoPlayerController.network(
-      sources[currentPlayIndex],
+    _videoPlayerController1 = VideoPlayerController.networkUrl(
+      Uri.parse(sources[currentPlayIndex]),
       // closedCaptionFile: loadCaptions('https://letcheck.b-cdn.net/test.srt'),
     );
-    _videoPlayerController2 = VideoPlayerController.network(sources[currentPlayIndex]);
-    await Future.wait([_videoPlayerController1.initialize(), _videoPlayerController2.initialize()]);
+    _videoPlayerController2 =
+        VideoPlayerController.networkUrl(Uri.parse(sources[currentPlayIndex]));
+    await Future.wait([
+      _videoPlayerController1.initialize(),
+      _videoPlayerController2.initialize()
+    ]);
     _createChewieController();
     setState(() {});
   }
 
   void _createChewieController() {
     _chewieController = ChewieController(
+      showAirPlay: true,
+
       videoPlayerController: _videoPlayerController1,
       autoPlay: true,
       looping: true,
-      progressIndicatorDelay: bufferDelay != null ? Duration(milliseconds: bufferDelay!) : null,
+      progressIndicatorDelay:
+          bufferDelay != null ? Duration(milliseconds: bufferDelay!) : null,
       additionalOptions: (context) {
         return <OptionItem>[
           OptionItem(
@@ -88,7 +95,8 @@ class _ChewieDemoState extends State<ChewieDemo> {
       showAutoPlaySwitch: true,
       popupMenuButton: PopupMenuButton(
         icon: const Icon(Icons.more_vert, color: Colors.white),
-        itemBuilder: (context) => [const PopupMenuItem<String>(child: Text('test'))],
+        itemBuilder: (context) =>
+            [const PopupMenuItem<String>(child: Text('test'))],
         padding: EdgeInsets.zero,
       ),
       onSwitchedAutoPlay: (value) {
@@ -97,15 +105,18 @@ class _ChewieDemoState extends State<ChewieDemo> {
       sectionDurationRange: [
         VideoChaptersModel(
           title: 'Chapter 1',
-          durationRange: DurationRange(Duration.zero, const Duration(seconds: 20)),
+          durationRange:
+              DurationRange(Duration.zero, const Duration(seconds: 20)),
         ),
         VideoChaptersModel(
           title: 'Chapter 2',
-          durationRange: DurationRange(const Duration(seconds: 20), const Duration(seconds: 50)),
+          durationRange: DurationRange(
+              const Duration(seconds: 20), const Duration(seconds: 50)),
         ),
         VideoChaptersModel(
           title: 'Chapter 3',
-          durationRange: DurationRange(const Duration(seconds: 50), const Duration(seconds: 163)),
+          durationRange: DurationRange(
+              const Duration(seconds: 50), const Duration(seconds: 163)),
         ),
       ],
       momentsList: [
@@ -120,7 +131,11 @@ class _ChewieDemoState extends State<ChewieDemo> {
       ],
       hideControlsTimer: const Duration(seconds: 1),
       deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
-      deviceOrientationsOnEnterFullScreen: [DeviceOrientation.portraitUp, DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft],
+      deviceOrientationsOnEnterFullScreen: [
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.landscapeRight,
+        DeviceOrientation.landscapeLeft
+      ],
     );
   }
 
@@ -151,7 +166,9 @@ class _ChewieDemoState extends State<ChewieDemo> {
             SizedBox(
               height: 220,
               child: Center(
-                child: _chewieController != null && _chewieController!.videoPlayerController.value.isInitialized
+                child: _chewieController != null &&
+                        _chewieController!
+                            .videoPlayerController.value.isInitialized
                     ? Chewie(controller: _chewieController!)
                     : Column(
                         mainAxisAlignment: MainAxisAlignment.center,
