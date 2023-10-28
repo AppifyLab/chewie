@@ -391,9 +391,11 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
               if (Platform.isIOS) ...[
                 if (chewieController.showAirPlay)
                   const SizedBox(
-                    width: 44.0,
+                    width: 20,
                     height: 44.0,
-                    child: AirPlayIconButton(),
+                    child: AirPlayIconButton(
+                      color: Colors.white,
+                    ),
                   ),
               ],
               if (chewieController.showDownloadOption)
