@@ -31,10 +31,13 @@ typedef ChewieRoutePageBuilder = Widget Function(
 /// `video_player` is pretty low level. Chewie wraps it in a friendly skin to
 /// make it easy to use!
 class Chewie extends StatefulWidget {
-  const Chewie({Key? key, required this.controller}) : super(key: key);
+  const Chewie(
+      {Key? key, required this.controller, required this.subtitleController})
+      : super(key: key);
 
   /// The [ChewieController]
   final ChewieController controller;
+  final SubtitleController subtitleController;
 
   @override
   ChewieState createState() {
@@ -89,7 +92,7 @@ class ChewieState extends State<Chewie> {
   @override
   Widget build(BuildContext context) {
     return SubtitleWrapper(
-      subtitleController: widget.controller.subtitleController,
+      subtitleController: widget.subtitleController,
       backgroundColor: Colors.black,
       subtitleStyle: SubtitleStyle(
           textColor: Colors.white,
@@ -117,8 +120,7 @@ class ChewieState extends State<Chewie> {
         alignment: Alignment.center,
         color: Colors.black,
         child: SubtitleWrapper(
-            subtitleController:
-                controllerProvider.controller.subtitleController,
+            subtitleController: widget.subtitleController,
             backgroundColor: Colors.black,
             subtitleStyle: SubtitleStyle(
                 textColor: Colors.white,
@@ -451,8 +453,6 @@ class ChewieController extends ChangeNotifier {
   final bool showOptions;
   final bool showAirPlay;
 
-  late SubtitleController subtitleController;
-
   /// Section duration data
   final List<VideoChaptersModel>? sectionDurationRange;
 
@@ -630,8 +630,6 @@ class ChewieController extends ChangeNotifier {
   bool get isPlaying => videoPlayerController.value.isPlaying;
 
   Future _initialize() async {
-    subtitleController = SubtitleController(subtitleType: SubtitleType.srt);
-
     await videoPlayerController.setLooping(looping);
 
     if ((autoInitialize || autoPlay) &&
@@ -666,14 +664,6 @@ class ChewieController extends ChangeNotifier {
   void enterFullScreen() {
     _isFullScreen = true;
     notifyListeners();
-  }
-
-  void updateSubtitle(String? subtitle) {
-    if (subtitle == null) {
-      subtitleController.detach();
-    } else {
-      subtitleController.updateSubtitleUrl(url: subtitle);
-    }
   }
 
   void exitFullScreen() {

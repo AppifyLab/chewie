@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.13.5
+  subtitle_wrapper_package: ^2.2.0
 
 dev_dependencies:
   flutter_test:
