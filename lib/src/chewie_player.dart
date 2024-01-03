@@ -106,7 +106,7 @@ class ChewieState extends State<Chewie> {
         builder: (BuildContext builderContext) {
           // Find the immediate parent widget of ChewieControllerProvider
           SubtitleWrapper? parentWidget =
-              BuilderHelper.findAncestor<SubtitleWrapper>(builderContext);
+              BuilderHelper.findAncestor<SubtitleWrapper>(context);
 
           return Container(
             alignment: Alignment.center,
