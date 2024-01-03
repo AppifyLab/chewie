@@ -11,8 +11,11 @@ import 'package:chewie/src/player_with_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:subtitle_wrapper_package/subtitle_wrapper.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+
+import 'helpers/builder_helper.dart';
 
 typedef ChewieRoutePageBuilder = Widget Function(
   BuildContext context,
@@ -91,24 +94,6 @@ class ChewieState extends State<Chewie> {
         builder: (context, w) => const PlayerWithControls(),
       ),
     );
-
-    /*SubtitleWrapper(
-      subtitleController: widget.subtitleController,
-      backgroundColor: Colors.black,
-      subtitleStyle: SubtitleStyle(
-          textColor: Colors.white,
-          hasBorder: true,
-          borderStyle: SubtitleBorderStyle(),
-          position: SubtitlePosition(bottom: 10)),
-      videoPlayerController: widget.controller.videoPlayerController,
-      videoChild: ChewieControllerProvider(
-        controller: widget.controller,
-        child: ChangeNotifierProvider<PlayerNotifier>.value(
-          value: notifier,
-          builder: (context, w) => const PlayerWithControls(),
-        ),
-      ),
-    );*/
   }
 
   Widget _buildFullScreenVideo(
@@ -117,22 +102,28 @@ class ChewieState extends State<Chewie> {
       ChewieControllerProvider controllerProvider) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Container(
-          alignment: Alignment.center,
-          color: Colors.black,
-          child: controllerProvider
-          /*SubtitleWrapper(
-            subtitleController: widget.subtitleController,
-            backgroundColor: Colors.black,
-            subtitleStyle: SubtitleStyle(
-                textColor: Colors.white,
-                hasBorder: true,
-                borderStyle: SubtitleBorderStyle(),
-                position: SubtitlePosition(bottom: 10)),
-            videoPlayerController:
-                controllerProvider.controller.videoPlayerController,
-            videoChild: controllerProvider),*/
-          ),
+      body: Builder(
+        builder: (BuildContext builderContext) {
+          // Find the immediate parent widget of ChewieControllerProvider
+          SubtitleWrapper? parentWidget =
+              BuilderHelper.findAncestor<SubtitleWrapper>(builderContext);
+
+          return Container(
+            alignment: Alignment.center,
+            color: Colors.black,
+            child: parentWidget ?? controllerProvider,
+          );
+        },
+      ),
+
+      /*Builder(
+        builder: (context) {
+          return Container(
+              alignment: Alignment.center,
+              color: Colors.black,
+              child: controllerProvider);
+        },
+      ),*/
     );
   }
 
