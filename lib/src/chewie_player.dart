@@ -11,11 +11,6 @@ import 'package:chewie/src/player_with_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:subtitle_wrapper_package/data/models/style/subtitle_border_style.dart';
-import 'package:subtitle_wrapper_package/data/models/style/subtitle_position.dart';
-import 'package:subtitle_wrapper_package/data/models/style/subtitle_style.dart';
-import 'package:subtitle_wrapper_package/subtitle_controller.dart';
-import 'package:subtitle_wrapper_package/subtitle_wrapper.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
@@ -31,13 +26,11 @@ typedef ChewieRoutePageBuilder = Widget Function(
 /// `video_player` is pretty low level. Chewie wraps it in a friendly skin to
 /// make it easy to use!
 class Chewie extends StatefulWidget {
-  const Chewie(
-      {Key? key, required this.controller, required this.subtitleController})
-      : super(key: key);
+  const Chewie({Key? key, required this.controller}) : super(key: key);
 
   /// The [ChewieController]
   final ChewieController controller;
-  final SubtitleController subtitleController;
+  //final SubtitleController subtitleController;
 
   @override
   ChewieState createState() {
@@ -91,7 +84,15 @@ class ChewieState extends State<Chewie> {
 
   @override
   Widget build(BuildContext context) {
-    return SubtitleWrapper(
+    return ChewieControllerProvider(
+      controller: widget.controller,
+      child: ChangeNotifierProvider<PlayerNotifier>.value(
+        value: notifier,
+        builder: (context, w) => const PlayerWithControls(),
+      ),
+    );
+
+    /*SubtitleWrapper(
       subtitleController: widget.subtitleController,
       backgroundColor: Colors.black,
       subtitleStyle: SubtitleStyle(
@@ -107,7 +108,7 @@ class ChewieState extends State<Chewie> {
           builder: (context, w) => const PlayerWithControls(),
         ),
       ),
-    );
+    );*/
   }
 
   Widget _buildFullScreenVideo(
@@ -117,9 +118,10 @@ class ChewieState extends State<Chewie> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
-        alignment: Alignment.center,
-        color: Colors.black,
-        child: SubtitleWrapper(
+          alignment: Alignment.center,
+          color: Colors.black,
+          child: controllerProvider
+          /*SubtitleWrapper(
             subtitleController: widget.subtitleController,
             backgroundColor: Colors.black,
             subtitleStyle: SubtitleStyle(
@@ -129,8 +131,8 @@ class ChewieState extends State<Chewie> {
                 position: SubtitlePosition(bottom: 10)),
             videoPlayerController:
                 controllerProvider.controller.videoPlayerController,
-            videoChild: controllerProvider),
-      ),
+            videoChild: controllerProvider),*/
+          ),
     );
   }
 
