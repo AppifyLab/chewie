@@ -11,6 +11,11 @@ import 'package:chewie/src/player_with_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:subtitle_wrapper_package/data/models/style/subtitle_border_style.dart';
+import 'package:subtitle_wrapper_package/data/models/style/subtitle_position.dart';
+import 'package:subtitle_wrapper_package/data/models/style/subtitle_style.dart';
+import 'package:subtitle_wrapper_package/subtitle_controller.dart';
+import 'package:subtitle_wrapper_package/subtitle_wrapper.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
@@ -83,11 +88,21 @@ class ChewieState extends State<Chewie> {
 
   @override
   Widget build(BuildContext context) {
-    return ChewieControllerProvider(
-      controller: widget.controller,
-      child: ChangeNotifierProvider<PlayerNotifier>.value(
-        value: notifier,
-        builder: (context, w) => const PlayerWithControls(),
+    return SubtitleWrapper(
+      subtitleController: widget.controller.subtitleController,
+      backgroundColor: Colors.black,
+      subtitleStyle: SubtitleStyle(
+          textColor: Colors.white,
+          hasBorder: true,
+          borderStyle: SubtitleBorderStyle(),
+          position: SubtitlePosition(bottom: 10)),
+      videoPlayerController: widget.controller.videoPlayerController,
+      videoChild: ChewieControllerProvider(
+        controller: widget.controller,
+        child: ChangeNotifierProvider<PlayerNotifier>.value(
+          value: notifier,
+          builder: (context, w) => const PlayerWithControls(),
+        ),
       ),
     );
   }
@@ -101,7 +116,18 @@ class ChewieState extends State<Chewie> {
       body: Container(
         alignment: Alignment.center,
         color: Colors.black,
-        child: controllerProvider,
+        child: SubtitleWrapper(
+            subtitleController:
+                controllerProvider.controller.subtitleController,
+            backgroundColor: Colors.black,
+            subtitleStyle: SubtitleStyle(
+                textColor: Colors.white,
+                hasBorder: true,
+                borderStyle: SubtitleBorderStyle(),
+                position: SubtitlePosition(bottom: 10)),
+            videoPlayerController:
+                controllerProvider.controller.videoPlayerController,
+            videoChild: controllerProvider),
       ),
     );
   }
@@ -265,8 +291,8 @@ class ChewieController extends ChangeNotifier {
     this.transformationController,
     this.zoomAndPan = false,
     this.maxScale = 2.5,
-    this.subtitle,
-    this.subtitleBuilder,
+    // this.subtitle,
+    // this.subtitleBuilder,
     this.subtitlesDisabled = true,
     this.showSubtitle = true,
     this.showDownloadOption = false,
@@ -381,7 +407,7 @@ class ChewieController extends ChangeNotifier {
       additionalOptions: additionalOptions ?? this.additionalOptions,
       showControls: showControls ?? this.showControls,
       // subtitle: subtitle ?? this.subtitle,
-      subtitleBuilder: subtitleBuilder ?? this.subtitleBuilder,
+      // subtitleBuilder: subtitleBuilder ?? this.subtitleBuilder,
       subtitlesDisabled: subtitlesDisabled ?? this.subtitlesDisabled,
       showSubtitle: showSubtitle ?? this.showSubtitle,
       showDownloadOption: showDownloadOption ?? this.showDownloadOption,
@@ -425,6 +451,8 @@ class ChewieController extends ChangeNotifier {
   final bool showOptions;
   final bool showAirPlay;
 
+  late SubtitleController subtitleController;
+
   /// Section duration data
   final List<VideoChaptersModel>? sectionDurationRange;
 
@@ -454,10 +482,10 @@ class ChewieController extends ChangeNotifier {
   final List<OptionItem> Function(BuildContext context)? additionalOptions;
 
   // /// Define here your own Widget on how your n'th subtitle will look like
-  Widget Function(BuildContext context, dynamic subtitle)? subtitleBuilder;
+  // Widget Function(BuildContext context, dynamic subtitle)? subtitleBuilder;
 
   // /// Add a List of Subtitles here in `Subtitles.subtitle`
-  Subtitles? subtitle;
+  // Subtitles? subtitle;
 
   /// Whether to show subtitles control icon button as disabled
   final bool subtitlesDisabled;
@@ -602,6 +630,8 @@ class ChewieController extends ChangeNotifier {
   bool get isPlaying => videoPlayerController.value.isPlaying;
 
   Future _initialize() async {
+    subtitleController = SubtitleController(subtitleType: SubtitleType.srt);
+
     await videoPlayerController.setLooping(looping);
 
     if ((autoInitialize || autoPlay) &&
@@ -636,6 +666,14 @@ class ChewieController extends ChangeNotifier {
   void enterFullScreen() {
     _isFullScreen = true;
     notifyListeners();
+  }
+
+  void updateSubtitle(String? subtitle) {
+    if (subtitle == null) {
+      subtitleController.detach();
+    } else {
+      subtitleController.updateSubtitleUrl(url: subtitle);
+    }
   }
 
   void exitFullScreen() {

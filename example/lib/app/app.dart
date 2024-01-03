@@ -91,6 +91,7 @@ class _ChewieDemoState extends State<ChewieDemo> {
           ),
         ];
       },
+
       // showDownloadOption: true,
       showAutoPlaySwitch: true,
       popupMenuButton: PopupMenuButton(
@@ -129,6 +130,8 @@ class _ChewieDemoState extends State<ChewieDemo> {
           timestamp: 20,
         ),
       ],
+
+      subtitlesDisabled: false,
       hideControlsTimer: const Duration(seconds: 1),
       deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
       deviceOrientationsOnEnterFullScreen: [
