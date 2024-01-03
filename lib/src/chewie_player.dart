@@ -11,11 +11,8 @@ import 'package:chewie/src/player_with_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:subtitle_wrapper_package/subtitle_wrapper.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
-
-import 'helpers/builder_helper.dart';
 
 typedef ChewieRoutePageBuilder = Widget Function(
   BuildContext context,
@@ -102,28 +99,10 @@ class ChewieState extends State<Chewie> {
       ChewieControllerProvider controllerProvider) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Builder(
-        builder: (BuildContext builderContext) {
-          // Find the immediate parent widget of ChewieControllerProvider
-          SubtitleWrapper? parentWidget =
-              BuilderHelper.findAncestor<SubtitleWrapper>(context);
-
-          return Container(
-            alignment: Alignment.center,
-            color: Colors.black,
-            child: parentWidget ?? controllerProvider,
-          );
-        },
-      ),
-
-      /*Builder(
-        builder: (context) {
-          return Container(
-              alignment: Alignment.center,
-              color: Colors.black,
-              child: controllerProvider);
-        },
-      ),*/
+      body: Container(
+          alignment: Alignment.center,
+          color: Colors.black,
+          child: controllerProvider),
     );
   }
 
