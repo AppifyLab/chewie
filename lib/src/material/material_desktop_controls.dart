@@ -137,8 +137,8 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
                                 ? 0
                                 : barHeight * 0.8,
                       ),
-                      child:
-                          _buildSubtitles(context, chewieController.subtitle!),
+                      child: _buildSubtitles(
+                          context, chewieController.subtitle ?? Subtitles([])),
 
                       /*ClosedCaption(
                         text: _chewieController
