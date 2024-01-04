@@ -265,8 +265,8 @@ class ChewieController extends ChangeNotifier {
     this.transformationController,
     this.zoomAndPan = false,
     this.maxScale = 2.5,
-    this.subtitle,
-    this.subtitleBuilder,
+    // this.subtitle,
+    // this.subtitleBuilder,
     this.subtitlesDisabled = true,
     this.showSubtitle = true,
     this.showDownloadOption = false,
@@ -380,8 +380,8 @@ class ChewieController extends ChangeNotifier {
       optionsBuilder: optionsBuilder ?? this.optionsBuilder,
       additionalOptions: additionalOptions ?? this.additionalOptions,
       showControls: showControls ?? this.showControls,
-      subtitle: subtitle ?? this.subtitle,
-      subtitleBuilder: subtitleBuilder ?? this.subtitleBuilder,
+      // subtitle: subtitle ?? this.subtitle,
+      // subtitleBuilder: subtitleBuilder ?? this.subtitleBuilder,
       subtitlesDisabled: subtitlesDisabled ?? this.subtitlesDisabled,
       showSubtitle: showSubtitle ?? this.showSubtitle,
       showDownloadOption: showDownloadOption ?? this.showDownloadOption,
@@ -453,11 +453,11 @@ class ChewieController extends ChangeNotifier {
   /// Add your own additional options on top of chewie options
   final List<OptionItem> Function(BuildContext context)? additionalOptions;
 
-  /// Define here your own Widget on how your n'th subtitle will look like
-  Widget Function(BuildContext context, dynamic subtitle)? subtitleBuilder;
+  // /// Define here your own Widget on how your n'th subtitle will look like
+  // Widget Function(BuildContext context, dynamic subtitle)? subtitleBuilder;
 
-  /// Add a List of Subtitles here in `Subtitles.subtitle`
-  Subtitles? subtitle;
+  // /// Add a List of Subtitles here in `Subtitles.subtitle`
+  // Subtitles? subtitle;
 
   /// Whether to show subtitles control icon button as disabled
   final bool subtitlesDisabled;
@@ -673,9 +673,9 @@ class ChewieController extends ChangeNotifier {
     await videoPlayerController.setVolume(volume);
   }
 
-  void setSubtitle(List<Subtitle> newSubtitle) {
-    subtitle = Subtitles(newSubtitle);
-  }
+  // void setSubtitle(List<Subtitle> newSubtitle) {
+  //   subtitle = Subtitles(newSubtitle);
+  // }
 }
 
 class ChewieControllerProvider extends InheritedWidget {
