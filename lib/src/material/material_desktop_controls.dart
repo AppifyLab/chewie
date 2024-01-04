@@ -2,16 +2,14 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:chewie/chewie.dart';
 import 'package:chewie/src/animated_play_pause.dart';
 import 'package:chewie/src/center_play_button.dart';
-import 'package:chewie/src/chewie_player.dart';
-import 'package:chewie/src/chewie_progress_colors.dart';
 import 'package:chewie/src/helpers/utils.dart';
 import 'package:chewie/src/material/material_progress_bar.dart';
 import 'package:chewie/src/material/widgets/custom_switch_button.dart';
 import 'package:chewie/src/material/widgets/options_dialog.dart';
 import 'package:chewie/src/material/widgets/playback_speed_dialog.dart';
-import 'package:chewie/src/models/option_item.dart';
 import 'package:chewie/src/notifiers/index.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +37,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
   double? _latestVolume;
   Timer? _hideTimer;
   Timer? _initTimer;
-  // late var _subtitlesPosition = Duration.zero;
+  late var _subtitlesPosition = Duration.zero;
   bool _subtitleOn = false;
   Timer? _showAfterExpandCollapseTimer;
   bool _dragging = false;
@@ -139,12 +137,15 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
                                 ? 0
                                 : barHeight * 0.8,
                       ),
-                      child: ClosedCaption(
+                      child:
+                          _buildSubtitles(context, chewieController.subtitle!),
+
+                      /*ClosedCaption(
                         text: _chewieController
                             ?.videoPlayerController.value.caption.text,
                         textStyle:
                             const TextStyle(fontSize: 14, color: Colors.white),
-                      ),
+                      ),*/
                     ),
                   // on hover thumbnail preview container
                   _buildBottomBar(context),
@@ -343,38 +344,38 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
     );
   }
 
-  // Widget _buildSubtitles(BuildContext context, Subtitles subtitles) {
-  //   if (!_subtitleOn) {
-  //     return Container();
-  //   }
-  //   final currentSubtitle = subtitles.getByPosition(_subtitlesPosition);
-  //   if (currentSubtitle.isEmpty) {
-  //     return Container();
-  //   }
+  Widget _buildSubtitles(BuildContext context, Subtitles subtitles) {
+    if (!_subtitleOn) {
+      return Container();
+    }
+    final currentSubtitle = subtitles.getByPosition(_subtitlesPosition);
+    if (currentSubtitle.isEmpty) {
+      return Container();
+    }
 
-  //   if (chewieController.subtitleBuilder != null) {
-  //     return chewieController.subtitleBuilder!(
-  //       context,
-  //       currentSubtitle.first!.text,
-  //     );
-  //   }
+    if (chewieController.subtitleBuilder != null) {
+      return chewieController.subtitleBuilder!(
+        context,
+        currentSubtitle.first!.text,
+      );
+    }
 
-  //   return Padding(
-  //     padding: EdgeInsets.all(marginSize),
-  //     child: Container(
-  //       padding: const EdgeInsets.all(5),
-  //       decoration: BoxDecoration(
-  //         color: const Color(0x96000000),
-  //         borderRadius: BorderRadius.circular(10.0),
-  //       ),
-  //       child: Text(
-  //         currentSubtitle.first!.text.toString(),
-  //         style: const TextStyle(fontSize: 18),
-  //         textAlign: TextAlign.center,
-  //       ),
-  //     ),
-  //   );
-  // }
+    return Padding(
+      padding: EdgeInsets.all(marginSize),
+      child: Container(
+        padding: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          color: const Color(0x96000000),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Text(
+          currentSubtitle.first!.text.toString(),
+          style: const TextStyle(fontSize: 18),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
 
   Widget _buildTopBar() {
     return Positioned(
@@ -830,7 +831,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
 
     setState(() {
       _latestValue = controller.value;
-      // _subtitlesPosition = controller.value.position;
+      _subtitlesPosition = controller.value.position;
     });
   }
 
