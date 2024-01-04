@@ -403,7 +403,7 @@ class _MaterialDesktopControlsState extends State<MaterialDesktopControls>
                 _buildDownloadButton()
               else
                 const Padding(
-                  padding: EdgeInsets.only(right: 10, top: 25,bottom: 25),
+                  padding: EdgeInsets.only(right: 10, top: 25, bottom: 25),
                 ),
               if (chewieController.popupMenuButton != null)
                 chewieController.popupMenuButton!,
